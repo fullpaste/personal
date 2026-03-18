@@ -815,9 +815,7 @@ const sa=LS.get('xd9_accent');
 if(sa){setAccent(sa.c,sa.g);document.querySelectorAll('.swatch').forEach(s=>s.classList.toggle('active',s.dataset.c===sa.c));}
 document.querySelectorAll('.swatch').forEach(s=>{s.addEventListener('click',()=>{document.querySelectorAll('.swatch').forEach(x=>x.classList.remove('active'));s.classList.add('active');setAccent(s.dataset.c,s.dataset.g);});});
 
-// ── ANNOUNCEMENT BANNER ──
-function loadBanner(){
-// ── BANNER (no-op — removed from this page) ──
+// ── BANNER (no-op) ──
 function loadBanner(){}
 
 // ── MAINTENANCE ──
