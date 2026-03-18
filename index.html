@@ -817,50 +817,48 @@ document.querySelectorAll('.swatch').forEach(s=>{s.addEventListener('click',()=>
 
 // ── ANNOUNCEMENT BANNER ──
 function loadBanner(){
-  const b=LS.get('xd9_banner')||{};
-  document.getElementById('banner-toggle').checked=!!b.show;
-  document.getElementById('banner-text').value=b.text||'';
-  const ann=document.getElementById('ann-banner');
-  if(b.show&&b.text&&!b.dismissed){document.getElementById('ann-text').textContent=b.text;ann.classList.add('show');}
-  else{ann.classList.remove('show');}
-}
-loadBanner();
-document.getElementById('ann-close').addEventListener('click',()=>{document.getElementById('ann-banner').classList.remove('show');const b=LS.get('xd9_banner')||{};b.dismissed=true;LS.set('xd9_banner',b);});
-document.getElementById('banner-save').addEventListener('click',()=>{LS.set('xd9_banner',{show:document.getElementById('banner-toggle').checked,text:document.getElementById('banner-text').value.trim(),dismissed:false});loadBanner();const b=document.getElementById('banner-save');b.textContent='Saved ✓';b.style.color='#4eff91';setTimeout(()=>{b.textContent='Save banner';b.style.color='';},1500);});
+// ── BANNER (no-op — removed from this page) ──
+function loadBanner(){}
 
 // ── MAINTENANCE ──
 let cdInterval=null;
 function startCountdown(endsAt){
   clearInterval(cdInterval);
-  const tick=()=>{const rem=Math.max(0,endsAt-Date.now());document.getElementById('cd-h').textContent=String(Math.floor(rem/3600000)).padStart(2,'0');document.getElementById('cd-m').textContent=String(Math.floor((rem%3600000)/60000)).padStart(2,'0');document.getElementById('cd-s').textContent=String(Math.floor((rem%60000)/1000)).padStart(2,'0');if(rem<=0){clearInterval(cdInterval);setMaint(false);LS.set('xd9_maint_ends',null);}};
+  const tick=()=>{
+    const rem=Math.max(0,endsAt-Date.now());
+    const hEl=document.getElementById('cd-h'),mEl=document.getElementById('cd-m'),sEl=document.getElementById('cd-s');
+    if(hEl)hEl.textContent=String(Math.floor(rem/3600000)).padStart(2,'0');
+    if(mEl)mEl.textContent=String(Math.floor((rem%3600000)/60000)).padStart(2,'0');
+    if(sEl)sEl.textContent=String(Math.floor((rem%60000)/1000)).padStart(2,'0');
+    if(rem<=0){clearInterval(cdInterval);setMaint(false);LS.set('xd9_maint_ends',null);}
+  };
   tick();cdInterval=setInterval(tick,1000);
 }
 function setMaint(on){
   LS.set('xd9_maint',on?1:0);
-  document.getElementById('maint-toggle').checked=on;
-  document.getElementById('maint-overlay').classList.toggle('active',on);
-  if(!on){clearInterval(cdInterval);['cd-h','cd-m','cd-s'].forEach(id=>document.getElementById(id).textContent='--');}
+  const tog=document.getElementById('maint-toggle');if(tog)tog.checked=on;
+  const ov=document.getElementById('maint-overlay');if(ov)ov.classList.toggle('active',on);
+  if(!on){clearInterval(cdInterval);['cd-h','cd-m','cd-s'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='--';});}
 }
 setMaint(LS.get('xd9_maint')===1);
 const se=LS.get('xd9_maint_ends');if(LS.get('xd9_maint')===1&&se&&se>Date.now())startCountdown(se);
-document.getElementById('maint-toggle').addEventListener('change',e=>{if(!e.target.checked){setMaint(false);LS.set('xd9_maint_ends',null);}else setMaint(true);});
+const maintTogEl=document.getElementById('maint-toggle');
+if(maintTogEl)maintTogEl.addEventListener('change',e=>{if(!e.target.checked){setMaint(false);LS.set('xd9_maint_ends',null);}else setMaint(true);});
 
 // ── SAVE SETTINGS ──
 function loadAdminInputs(){
-  const s=LS.get('xd9_stats')||{};
-  document.getElementById('inp-edits').value=s.edits||'0';
-  document.getElementById('inp-followers').value=s.followers||'0';
-  document.getElementById('inp-promos').value=s.promos||'0';
   const p=LS.get('xd9_profile')||{};
-  document.getElementById('inp-dispname').value=p.name||'@xd9';
-  document.getElementById('inp-bio').value=(p.bios||[]).join('\n');
+  const dn=document.getElementById('inp-dispname');if(dn)dn.value=p.name||'@xd9';
+  const bi=document.getElementById('inp-bio');if(bi)bi.value=(p.bios||[]).join('\n');
 }
 loadAdminInputs();
-document.getElementById('ap-save').addEventListener('click',()=>{
-  const pname=document.getElementById('inp-dispname').value.trim()||'@xd9';
-  const pbios=document.getElementById('inp-bio').value.split('\n').filter(l=>l.trim());
+const apSaveBtn=document.getElementById('ap-save');
+if(apSaveBtn)apSaveBtn.addEventListener('click',()=>{
+  const pname=(document.getElementById('inp-dispname').value||'').trim()||'@xd9';
+  const pbios=(document.getElementById('inp-bio').value||'').split('\n').filter(l=>l.trim());
   LS.set('xd9_profile',{name:pname,bios:pbios});
-  const b=document.getElementById('ap-save');b.textContent='Saved ✓';b.style.color='#4eff91';setTimeout(()=>{b.textContent='Save changes';b.style.color='';},1500);
+  apSaveBtn.textContent='Saved ✓';apSaveBtn.style.color='#4eff91';
+  setTimeout(()=>{apSaveBtn.textContent='Save changes';apSaveBtn.style.color='';},1500);
 });
 
 // ── ADMIN NAV ──
