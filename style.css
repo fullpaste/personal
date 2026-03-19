@@ -283,3 +283,48 @@ body.car-theme   { --primary-color:#EAB308; --secondary-color:#FACC15; --cursor-
 @media (max-width:640px) {
   .guns-widgets { grid-template-columns:1fr; }
 }
+
+/* ── START SCREEN FIX ── */
+#start-screen {
+  position: fixed !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 50 !important;
+  background: rgba(0, 0, 0, 0.55) !important;
+  backdrop-filter: blur(6px) !important;
+  cursor: pointer !important;
+}
+#start-screen.hidden {
+  display: none !important;
+}
+#start-screen > div {
+  text-align: center;
+}
+#start-text {
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  letter-spacing: 3px !important;
+  color: #ffffff !important;
+  font-family: 'Space Mono', monospace !important;
+  text-shadow: 0 0 20px rgba(0, 206, 209, 0.6), 0 0 40px rgba(0, 206, 209, 0.3) !important;
+  min-height: 30px !important;
+  display: block !important;
+}
+
+/* ── VIDEO — make sure it's visible ── */
+.video-background {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  z-index: 0 !important;
+  transform: scale(1.02) !important;
+  /* NO brightness filter — keep original look */
+}
+
+#bg-overlay {
+  display: none !important; /* not in original project */
+}
