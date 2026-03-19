@@ -1,368 +1,1367 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>xd9</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Space+Mono&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Party Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        
+        .custom-cursor {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            background: url('assets/custom_cursor.png') no-repeat center center;
+            background-size: contain;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+        }
+
+        
+        body:not(.touch-device) {
+            cursor: pointer;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+
+        #background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .glitch-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        #hacker-overlay, #snow-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        
+        .controls {
+            position: fixed;
+            bottom: calc(50% - 240px - 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .theme-button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background-color: rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .theme-button:hover {
+            transform: scale(1.1);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .volume-icon {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            display: flex;
+            color: white;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 80px;
+            height: 5px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+        }
+
+        
+        .transparency-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .transparency-icon {
+            width: 20px;
+            height: 20px;
+            color: white;
+        }
+
+        
+        .top-controls {
+            position: fixed;
+            bottom: calc(50% - 240px - 60px);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 12px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        
+        #profile-block {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 820px;
+            min-height: 332px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease-out;
+            pointer-events: auto;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .profile-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+        }
+
+        .profile-container::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle at 10px 10px,
+                var(--primary-color, #00CED1) 10%,
+                transparent 15%
+            );
+            animation: orbit 3s linear infinite;
+            z-index: -1;
+            filter: blur(1px);
+            box-shadow: none;
+        }
+
+        .profile-container.fast-orbit::after {
+            animation: fast-orbit 0.5s linear forwards;
+        }
+
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            pointer-events: auto;
+            opacity: 1 !important;
+        }
+
+        .profile-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .name-and-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        
+        @font-face {
+            font-family: 'Angel Wish';
+            src: url('assets/Angel_wish.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        #profile-name {
+            font-family: 'Angel Wish', sans-serif;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            color: #fff;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+            opacity: 1 !important;
+        }
+
+        .badge-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .badge-container {
+            position: relative;
+            pointer-events: auto;
+            opacity: 1 !important;
+        }
+
+        .badge-container .tooltip {
+            visibility: hidden;
+            width: 120px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .badge-container:hover .tooltip {
+            visibility: visible;
+            opacity: 1 !important;
+        }
+
+        .badge-box {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 2px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+
+        .badge-box-inner {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            border-radius: 12px;
+            display: flex;
+            gap: 8px;
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .badge {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.3s;
+            pointer-events: auto;
+            opacity: 1 !important;
+        }
+
+        .badge:hover {
+            transform: scale(1.2);
+        }
+
+        #profile-bio {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 18px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            opacity: 1 !important;
+        }
+
+        .bio-separator {
+            width: 100%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 20px 0;
+            opacity: 1 !important;
+        }
+
+        .profile-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .visitor-counter {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            align-self: flex-start;
+            position: relative;
+            pointer-events: auto;
+            opacity: 1 !important;
+        }
+
+        .visitor-icon {
+            width: 18px;
+            height: 18px;
+            color: white;
+            opacity: 1 !important;
+        }
+
+        .visitor-counter .tooltip {
+            visibility: hidden;
+            width: 120px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 100;
+            top: -35px;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .visitor-counter:hover .tooltip {
+            visibility: visible;
+            opacity: 1 !important;
+        }
+
+        #visitor-count {
+            opacity: 1 !important;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 0;
+            pointer-events: auto;
+            opacity: 1 !important;
+        }
+
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+            pointer-events: auto;
+            opacity: 1 !important;
+        }
+
+        .social-icon:hover {
+            transform: scale(1.4) rotateY(15deg);
+        }
+
+        
+        #skills-block {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 820px;
+            min-height: 332px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            backdrop-filter: blur(10px);
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease-out;
+        }
+
+        .skills-title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .skill {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .skill-name {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .skill-icon {
+            width: 22px;
+            height: 22px;
+            margin-right: 8px;
+        }
+
+        .skill-bar-container {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .skill-bar {
+            height: 100%;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 2s;
+        }
+
+        #python-bar {
+            background: linear-gradient(90deg, #ff6b6b, #ff9f9f);
+        }
+
+        #cpp-bar {
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+        }
+
+        #csharp-bar {
+            background: linear-gradient(90deg, #43e97b, #38f9d7);
+        }
+
+        
+        #results-button-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+        }
+
+        #results-theme {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s;
+        }
+
+        #results-theme:hover {
+            background: rgba(0, 0, 0, 0.9);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        #results-hint {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            width: 180px;
+            text-align: center;
+            pointer-events: none;
+            z-index: 25;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #results-hint::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 0 10px 10px 10px;
+            border-style: solid;
+            border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
+        }
+
+        
+        .home-theme #profile-block,
+        .home-theme #skills-block {
+            border-color: rgba(0, 195, 255, 0.5);
+        }
+
+        .hacker-theme #profile-block,
+        .hacker-theme #skills-block {
+            border-color: rgba(0, 255, 0, 0.5);
+        }
+
+        .rain-theme #profile-block,
+        .rain-theme #skills-block {
+            border-color: rgba(100, 149, 237, 0.5);
+        }
+
+        .anime-theme #profile-block,
+        .anime-theme #skills-block {
+            border-color: rgba(255, 0, 255, 0.5);
+        }
+
+        .car-theme #profile-block,
+        .car-theme #skills-block {
+            border-color: rgba(255, 165, 0, 0.5);
+        }
+
+        
+        .glitch {
+            animation: glitch 0.2s ease-in-out;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes orbit {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fast-orbit {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        
+        .cursor-trail {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .cursor-trail-dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease;
+        }
+
+        
+        #start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 30;
+            cursor: pointer;
+        }
+
+        #start-text {
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            color: #fff;
+            text-align: center;
+        }
+
+        /* ── PRESENCE ROW ── */
+        .presence-row {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            margin: 0;
+        }
+
+        /* Discord card */
+        .dc-presence-card {
+            flex: 1;
+            background: rgba(30, 31, 34, 0.85);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .dc-presence-inner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dc-avatar-wrap {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .dc-pfp {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .dc-status-dot {
+            position: absolute;
+            bottom: 1px;
+            right: 1px;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            border: 2px solid #1e1f22;
+            box-sizing: border-box;
+        }
+        .dc-online  { background: #23a55a; }
+        .dc-idle    { background: #f0b232; }
+        .dc-dnd     { background: #f23f43; }
+        .dc-offline { background: #80848e; }
+
+        .dc-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .dc-name-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .dc-display-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dc-clan-tag {
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.7);
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 4px;
+            padding: 1px 5px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        .dc-username {
+            font-size: 12px;
+            color: rgba(255,255,255,0.45);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dc-activity {
+            font-size: 11px;
+            color: rgba(255,255,255,0.55);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 2px;
+        }
+
+        .dc-activity-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dc-activity-art {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .dc-activity-text {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            min-width: 0;
+        }
+
+        .dc-activity-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.75);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dc-activity-detail {
+            font-size: 10px;
+            color: rgba(255,255,255,0.45);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* GitHub card */
+        .gh-presence-card {
+            flex: 1;
+            background: rgba(22, 27, 34, 0.9);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .gh-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 5px;
+        }
+
+        .gh-card-header svg {
+            opacity: 0.6;
+        }
+
+        .gh-card-header span {
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 0.3px;
+        }
+
+        .gh-presence-inner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .gh-pfp {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .gh-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .gh-login {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .gh-stats-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .gh-stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .gh-stat svg {
+            flex-shrink: 0;
+            opacity: 0.6;
+        }
+
+        .gh-view-btn {
+            display: inline-block;
+            margin-top: 2px;
+            padding: 4px 12px;
+            background: #238636;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background 0.2s;
+            align-self: flex-start;
+        }
+
+        .gh-view-btn:hover {
+            background: #2ea043;
+        }
+
+        /* Presence loading / error states */
+        .presence-loading {
+            font-size: 11px;
+            color: rgba(255,255,255,0.3);
+            font-style: italic;
+        }
+
+        
+        @media (max-width: 430px) {
+            
+            #profile-block, #skills-block {
+                width: 90vw;
+                max-width: 350px;
+                min-height: 280px;
+                padding: 15px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .profile-container {
+                width: 120px;
+                height: 120px;
+            }
+
+            .profile-picture {
+                width: 120px;
+                height: 120px;
+            }
+
+            .profile-info {
+                align-items: center;
+                text-align: center;
+            }
+
+            .name-and-badges {
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+
+            #profile-name {
+                font-size: 24px;
+                letter-spacing: 2px;
+            }
+
+            .badge-group {
+                justify-content: center;
+                gap: 6px;
+            }
+
+            .badge {
+                width: 18px;
+                height: 18px;
+            }
+
+            .badge-container .tooltip {
+                width: 100px;
+                font-size: 12px;
+                margin-left: -50px;
+                bottom: 110%;
+            }
+
+            #profile-bio {
+                font-size: 14px;
+                line-height: 1.4;
+            }
+
+            .bio-separator {
+                margin: 15px 0;
+            }
+
+            .social-links {
+                gap: 10px;
+                justify-content: center;
+            }
+
+            .social-icon {
+                width: 32px;
+                height: 32px;
+            }
+
+            .visitor-counter {
+                font-size: 12px;
+                padding: 6px 12px;
+                align-self: center;
+            }
+
+            .visitor-icon {
+                width: 16px;
+                height: 16px;
+            }
+
+            .visitor-counter .tooltip {
+                width: 100px;
+                font-size: 12px;
+                margin-left: -50px;
+                top: -30px;
+            }
+
+            .skills-title {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+
+            .skill-icon {
+                width: 18px;
+                height: 18px;
+            }
+
+            .skill-name span {
+                font-size: 14px;
+            }
+
+            
+            .controls {
+                bottom: 20px;
+                gap: 8px;
+                padding: 5px 8px;
+            }
+
+            .theme-button {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+
+            
+            .top-controls {
+                bottom: 70px;
+                gap: 10px;
+                padding: 6px 10px;
+            }
+
+            .volume-control, .transparency-control {
+                gap: 6px;
+            }
+
+            .volume-icon, .transparency-icon {
+                width: 18px;
+                height: 18px;
+            }
+
+            .slider {
+                width: 60px;
+                height: 4px;
+            }
+
+            .slider::-webkit-slider-thumb {
+                width: 10px;
+                height: 10px;
+            }
+
+            
+            #results-button-container {
+                top: 10px;
+            }
+
+            #results-theme {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            #results-hint {
+                width: 150px;
+                font-size: 10px;
+                padding: 6px 10px;
+            }
+
+            
+            #start-text {
+                font-size: 18px;
+                padding: 0 20px;
+            }
+
+            /* Presence row mobile */
+            .presence-row {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .dc-pfp, .gh-pfp {
+                width: 38px;
+                height: 38px;
+            }
+
+            .dc-display-name, .gh-login {
+                font-size: 13px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Retro+Gaming&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="home-theme" onload="initMedia()">
+    
+    <div class="custom-cursor"></div>
 
-  <!-- ── BACKGROUND ── -->
-  <video id="background" class="video-background" autoplay muted loop playsinline
-    src="https://r2.guns.lol/8739d20d-297a-4f85-a8b3-9ef34916dfc7.mp4"></video>
-
-  <!-- ── OVERLAYS ── -->
-  <div id="hacker-overlay" class="hidden"></div>
-  <div id="snow-overlay" class="hidden"></div>
-  <div class="glitch-overlay"></div>
-
-  <!-- ── CURSOR ── -->
-  <div class="custom-cursor"></div>
-
-  <!-- ── START SCREEN ── -->
-  <div id="start-screen" class="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm cursor-pointer">
-    <div class="text-center">
-      <p id="start-text" class="text-2xl font-bold tracking-widest text-white font-mono"></p>
-    </div>
-  </div>
-
-  <!-- ── PROFILE BLOCK ── -->
-  <div id="profile-block"
-    class="hidden fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20
-           bg-black/80 backdrop-blur-md rounded-2xl p-6
-           border border-theme led-border animated-border"
-    style="width:640px;max-width:90vw;">
-
-    <!-- Top: pfp + name + badges + bio -->
-    <div class="flex items-start gap-6 mb-4">
-
-      <!-- PFP with orbit -->
-      <div class="profile-container flex-shrink-0">
-        <img class="profile-picture w-24 h-24 rounded-full object-cover border-2 profile-border cursor-pointer"
-          src="https://r2.guns.lol/b6ca3b19-d9ef-435f-9c9d-ae23de28183a.webp" alt="">
-      </div>
-
-      <!-- Info -->
-      <div class="flex-1 min-w-0">
-        <!-- Name -->
-        <div class="flex items-center gap-3 mb-2 flex-wrap">
-          <h1 id="profile-name" class="text-3xl font-bold tracking-wider name-gradient bg-clip-text text-transparent"></h1>
-          <!-- Badges -->
-          <div class="badge-group">
-            <div class="badge-container" title="Tools"><img class="badge" src="assets/badge_tools.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="🔧"><span class="badge-back" style="display:none">🔧</span></div>
-            <div class="badge-container" title="Crown"><img class="badge" src="assets/badge_crown.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="👑"><span class="badge-back" style="display:none">👑</span></div>
-            <div class="badge-container" title="Boost"><img class="badge" src="assets/badge_boost.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="🔄"><span class="badge-back" style="display:none">🔄</span></div>
-            <div class="badge-container" title="Active"><img class="badge" src="assets/badge_active.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="📱"><span class="badge-back" style="display:none">📱</span></div>
-            <div class="badge-container" title="Hot"><img class="badge" src="assets/badge_hot.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="🔥"><span class="badge-back" style="display:none">🔥</span></div>
-            <div class="badge-container" title="Dev"><img class="badge" src="assets/badge_dev.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="💉"><span class="badge-back" style="display:none">💉</span></div>
-            <div class="badge-container" title="Verified"><img class="badge" src="assets/badge_verified.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="✅"><span class="badge-back" style="display:none">✅</span></div>
-            <div class="badge-container" title="Award"><img class="badge" src="assets/badge_award.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="🏅"><span class="badge-back" style="display:none">🏅</span></div>
-          </div>
-        </div>
-        <!-- Bio -->
-        <p id="profile-bio" class="text-sm text-gray-300 font-mono mb-2 min-h-[20px]"></p>
-      </div>
+    
+    <div id="start-screen">
+        <div id="start-text"></div>
     </div>
 
-    <!-- Divider -->
-    <hr class="border-white/10 mb-4">
+    <div class="container">
+        
+        <video id="background" autoplay loop muted playsinline webkit-playsinline>
+            <source src="https://files.catbox.moe/6pyvma.mp4" type="video/mp4">
+        </video>
 
-    <!-- ══ GUNS.LOL WIDGETS (NEW) ══ -->
-    <div class="guns-widgets">
+        
+        <div class="glitch-overlay"></div>
+        <div id="hacker-overlay" class="hidden"></div>
+        <div id="snow-overlay" class="hidden"></div>
 
-      <!-- Discord Live Widget -->
-      <div class="guns-widget" id="dc-widget">
-        <div class="guns-w-avatar">
-          <img id="dc-pfp" src="https://r2.guns.lol/b6ca3b19-d9ef-435f-9c9d-ae23de28183a.webp" alt="">
-          <div class="guns-status s-dnd" id="dc-dot"></div>
-        </div>
-        <div class="guns-w-info">
-          <div class="guns-w-name">
-            <svg width="13" height="13" viewBox="0 0 71 55" fill="#5865f2" style="flex-shrink:0"><path d="M60.1 4.9A58.7 58.7 0 0 0 45.7.3a.2.2 0 0 0-.2.1 40.9 40.9 0 0 0-1.8 3.7 54.2 54.2 0 0 0-16.3 0A37.6 37.6 0 0 0 25.5.4a.2.2 0 0 0-.2-.1A58.5 58.5 0 0 0 10.9 4.9a.2.2 0 0 0-.1.1C1.6 18.1-.9 31 .3 43.7a.2.2 0 0 0 .1.1 59 59 0 0 0 17.8 9a.2.2 0 0 0 .2-.1 42.1 42.1 0 0 0 3.6-5.9.2.2 0 0 0-.1-.3 38.8 38.8 0 0 1-5.5-2.6.2.2 0 0 1 0-.4c.4-.3.7-.6 1.1-.9a.2.2 0 0 1 .2 0c11.5 5.3 24 5.3 35.4 0a.2.2 0 0 1 .2 0l1 .9a.2.2 0 0 1 0 .4 36.2 36.2 0 0 1-5.5 2.6.2.2 0 0 0-.1.3 47.2 47.2 0 0 0 3.6 5.9.2.2 0 0 0 .2.1 58.7 58.7 0 0 0 17.9-9 .2.2 0 0 0 .1-.1c1.5-15.3-2.5-28.6-10.6-40.4a.2.2 0 0 0-.1-.1ZM23.7 35.8c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.6 0 6.5 3.3 6.4 7.2 0 4-2.8 7.2-6.4 7.2Zm23.6 0c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.6 0 6.5 3.3 6.4 7.2 0 4-2.8 7.2-6.4 7.2Z"/></svg>
-            <span id="dc-name">63kc</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)"><path d="M22 4l-2-2-3 3-2-2-1 1 1 1-7 7H6l-3 3 3 3-2 2 1.5 1.5 2-2 3 3 3-3v-2l7-7 1 1 1-1-2-2 3-3zM9 15.5l-1-1 7-7 1 1z"/></svg>
-            <span class="guns-w-tag" id="dc-tag">lure</span>
-          </div>
-          <div class="guns-w-act" id="dc-activity">
-            <span>🎵</span><span id="dc-act">UPDATED WEBSITE, IN BIO</span>
-          </div>
-        </div>
-      </div>
 
-      <!-- GitHub Widget -->
-      <div class="guns-widget" id="gh-widget">
-        <div class="guns-gh-label">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.38-1.34-1.75-1.34-1.75-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.82.58C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
-          GitHub
-        </div>
-        <div class="guns-w-avatar">
-          <img id="gh-pfp" src="https://avatars.githubusercontent.com/u/0" alt="" style="border-radius:50%">
-        </div>
-        <div class="guns-w-info">
-          <div class="guns-w-name" id="gh-name" style="margin-bottom:3px">fullpaste</div>
-          <div class="guns-gh-stats">
-            <span class="guns-gh-stat" id="gh-followers">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              1 Followers
-            </span>
-            <span class="guns-gh-stat" id="gh-repos">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-              3 Repos
-            </span>
-          </div>
-          <a class="guns-view-btn" id="gh-link" href="https://github.com/fullpaste" target="_blank">View Profile</a>
-        </div>
-      </div>
+        <div id="profile-block">
+            <div class="profile-header">
+                <div class="profile-container">
+                    <img src="https://files.catbox.moe/vrisly.webp" alt="Profile" class="profile-picture">
+                </div>
+                <div class="profile-info">
+                    <div class="name-and-badges">
+                        <div id="profile-name">@party</div>
+                        <div class="badge-box">
+                            <div class="badge-box-inner">
+                                <div class="badge-group">
+                                    <div class="badge-container">
+                                        <img src="https://files.catbox.moe/dus2sp.png" alt="Staff" class="badge">
+                                        <span class="tooltip">Staff Member</span>
+                                    </div>
+                                    <div class="badge-container">
+                                        <img src="https://files.catbox.moe/2eb73l.png" alt="Owner" class="badge">
+                                        <span class="tooltip">Owner</span>
+                                    </div>
+                                    <div class="badge-container">
+                                        <img src="https://files.catbox.moe/na0q7m.png" alt="Partner" class="badge">
+                                        <span class="tooltip">Partner</span>
+                                    </div>
+                                    <div class="badge-container">
+                                        <img src="https://files.catbox.moe/lcitt3.png" alt="Developer" class="badge">
+                                        <span class="tooltip">Developer</span>
+                                    </div>
+                                    <div class="badge-container">
+                                        <img src="https://files.catbox.moe/c79xxu.png" alt="Bug Bounty" class="badge">
+                                        <span class="tooltip">Bug Bounty</span>
+                                    </div>
+                                    <div class="badge-container">
+                                        <img src="https://files.catbox.moe/qlrytb.png" alt="Hated by Guns.lol" class="badge">
+                                        <span class="tooltip">Hated by Guns.lol</span>
+                                    </div>
+                                    <div class="badge-container">
+                                        <img src="https://files.catbox.moe/di3sm3.png" alt="Hated by Fakecrime.bio" class="badge">
+                                        <span class="tooltip">Hated by Fakecrime.bio</span>
+                                    </div>
+                                    <div class="badge-container">
+                                        <img src="https://files.catbox.moe/kr3ebc.png" alt="Verified" class="badge">
+                                        <span class="tooltip">Verified</span>
+                                    </div>
+                                    <div class="badge-container">
+                                        <img src="https://files.catbox.moe/kgfjtl.png" alt="Rule Maker" class="badge">
+                                        <span class="tooltip">Rule Maker</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="profile-bio"></div>
+                </div>
+            </div>
 
+            <div class="bio-separator"></div>
+
+            <!-- ── PRESENCE ROW (Discord + GitHub) ── -->
+            <div class="presence-row">
+                <!-- Discord Presence Card -->
+                <div class="dc-presence-card" id="dc-presence-card">
+                    <div class="dc-presence-inner">
+                        <div class="dc-avatar-wrap">
+                            <img id="dc-pfp" src="https://cdn.discordapp.com/embed/avatars/0.png" class="dc-pfp" alt="Discord">
+                            <span id="dc-status-dot" class="dc-status-dot dc-offline"></span>
+                        </div>
+                        <div class="dc-info">
+                            <div class="dc-name-row">
+                                <span id="dc-display-name" class="dc-display-name presence-loading">connecting...</span>
+                                <span id="dc-clan-tag" class="dc-clan-tag" style="display:none;"></span>
+                            </div>
+                            <div id="dc-username" class="dc-username"></div>
+                            <div id="dc-activity" class="dc-activity"></div>
+                        </div>
+                    </div>
+                    <!-- Rich presence / RPC row (shown when active) -->
+                    <div id="dc-rpc-row" class="dc-activity-row" style="display:none;">
+                        <img id="dc-rpc-art" class="dc-activity-art" src="" alt="">
+                        <div class="dc-activity-text">
+                            <div id="dc-rpc-name" class="dc-activity-name"></div>
+                            <div id="dc-rpc-detail" class="dc-activity-detail"></div>
+                            <div id="dc-rpc-state" class="dc-activity-detail"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GitHub Card -->
+                <div class="gh-presence-card" id="gh-presence-card">
+                    <div class="gh-card-header">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+                            <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        <span>GitHub</span>
+                    </div>
+                    <div class="gh-presence-inner">
+                        <img id="gh-pfp" src="" class="gh-pfp" alt="GitHub" style="display:none;">
+                        <div class="gh-info">
+                            <div id="gh-login" class="gh-login presence-loading">loading...</div>
+                            <div class="gh-stats-row">
+                                <span class="gh-stat">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                    <span id="gh-followers-count">–</span>&nbsp;Followers
+                                </span>
+                                <span class="gh-stat">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                    </svg>
+                                    <span id="gh-repos-count">–</span>&nbsp;Repos
+                                </span>
+                            </div>
+                            <a id="gh-view-btn" href="#" target="_blank" class="gh-view-btn">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ── END PRESENCE ROW ── -->
+
+            <div class="profile-footer">
+
+                <div class="social-links">
+                    <a href="https://4lure.sellhub.cx/">
+                        <img src="https://files.catbox.moe/6ukb44.webp" alt="reload" class="social-icon">
+                    </a>
+                    <a href="https://guns.lol/xd9" target="_blank">
+                        <img src="https://files.catbox.moe/vdefru.webp" alt="reload" class="social-icon">
+                    </a>
+                    <a href="https://4lure.sellhub.cx/" target="_blank">
+                        <img src="https://files.catbox.moe/5a0hlf.webp" alt="reload" class="social-icon">
+                    </a>
+                    <a href="https://guns.lol/xd9" target="_blank">
+                        <img src="https://files.catbox.moe/oogw12.webp" alt="reload" class="social-icon">
+                    </a>
+                    <a href="https://4lure.sellhub.cx/" target="_blank">
+                        <img src="https://files.catbox.moe/5blt0p.webp" alt="reload" class="social-icon">
+                    </a>
+                    <a href="https://guns.lol/xd9" target="_blank">
+                        <img src="https://files.catbox.moe/wk9iek.webp" alt="reload" class="social-icon">
+                    </a>
+                    <a href="https://4lure.sellhub.cx/">
+                        <img src="https://files.catbox.moe/w14a8v.png" alt="reload" class="social-icon">
+                    </a>
+                </div>
+
+                <style>
+                    .social-links { display: flex; gap: 10px; }
+                    .social-icon { width: 50px; height: 50px; border-radius: 12px; cursor: pointer; transition: transform 0.2s ease; }
+                    .social-icon:hover { transform: scale(1.1); }
+                </style>
+
+                <div class="visitor-counter">
+                    <svg class="visitor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    <span id="visitor-count">23831</span>
+                    <span class="tooltip">Profile Views</span>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="skills-block" class="hidden">
+            <h2 class="skills-title">Coding Language</h2>
+            <div class="skill">
+                <div class="skill-name">
+                    <img src="https://files.catbox.moe/2ihujt.png" alt="Python" class="skill-icon">
+                    <span>HTML</span>
+                    <span>46.3%</span>
+                </div>
+                <div class="skill-bar-container">
+                    <div id="python-bar" class="skill-bar"></div>
+                </div>
+            </div>
+            <div class="skill">
+                <div class="skill-name">
+                    <img src="https://files.catbox.moe/1742ku.png" alt="C++" class="skill-icon">
+                    <span>CSS</span>
+                    <span>19.6%</span>
+                </div>
+                <div class="skill-bar-container">
+                    <div id="cpp-bar" class="skill-bar"></div>
+                </div>
+            </div>
+            <div class="skill">
+                <div class="skill-name">
+                    <img src="https://files.catbox.moe/t88e4b.png" alt="C#" class="skill-icon">
+                    <span>JavaScript</span>
+                    <span>34.1%</span>
+                </div>
+                <div class="skill-bar-container">
+                    <div id="csharp-bar" class="skill-bar"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="results-button-container" class="hidden">
+            <button id="results-theme">Open Source</button>
+            <div id="results-hint" class="hidden">Click again to return to profile</div>
+        </div>
+
+
+        <div class="controls">
+            <div id="home-theme" class="theme-button">1</div>
+            <div id="hacker-theme" class="theme-button">2</div>
+            <div id="rain-theme" class="theme-button">3</div>
+            <div id="anime-theme" class="theme-button">4</div>
+            <div id="car-theme" class="theme-button">5</div>
+        </div>
+
+
+        <div class="top-controls">
+            <div class="volume-control">
+                <svg id="volume-icon" class="volume-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                </svg>
+                <input id="volume-slider" class="slider" type="range" min="0" max="1" step="0.01" value="0.3">
+            </div>
+            <div class="transparency-control">
+                <svg class="transparency-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                </svg>
+                <input id="transparency-slider" class="slider" type="range" min="0" max="1" step="0.01" value="0.7">
+            </div>
+        </div>
     </div>
-    <!-- ══ END WIDGETS ══ -->
 
-    <!-- Social Icons -->
-    <div class="social-links mt-3 justify-center">
-      <a class="social-icon social-border" href="https://discord.com/invite/4z4gv7Qvxe" target="_blank" title="Discord">
-        <img src="https://r2.guns.lol/de46ec51-f129-47bc-bb93-fc4003a4842d.webp" width="28" height="28" alt="Discord">
-      </a>
-      <a class="social-icon social-border" href="#" onclick="copyAddr('bc1qs6l060za5m79w8rufd30ga6gy2ktdj9kz5yceg','BTC'); return false;" title="BTC">
-        <img src="https://r2.guns.lol/8cdb8448-c2bc-4fb4-8fc2-37f61a1a6782.webp" width="28" height="28" alt="BTC">
-      </a>
-      <a class="social-icon social-border" href="#" onclick="copyAddr('ltc1q7y4gg5ge97up9vnjvnfhu6rtgeht2trp4pmg9y','LTC'); return false;" title="LTC">
-        <img src="https://r2.guns.lol/991316f1-11f0-4019-8d13-5ff9e57cffd3.webp" width="28" height="28" alt="LTC">
-      </a>
-      <a class="social-icon social-border" href="#" onclick="copyAddr('0x8ac35A0aB12626532ddaFd9A29Bdf59991f000b5','ETH'); return false;" title="ETH">
-        <img src="https://r2.guns.lol/4a46a316-49ba-4c66-9311-851b36186e15.webp" width="28" height="28" alt="ETH">
-      </a>
-      <a class="social-icon social-border" href="https://4lure.sellhub.cx" target="_blank" title="Shop">
-        <img src="https://r2.guns.lol/28527312-ef78-4e8a-a37d-fbb5f2d28f04.webp" width="28" height="28" alt="Shop">
-      </a>
-    </div>
 
-    <!-- Visitor counter -->
-    <div class="visitor-counter flex items-center gap-2 text-sm font-mono mt-3">
-      <svg class="visitor-icon w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-      </svg>
-      <span id="visitor-count" class="visitor-count font-bold">0</span>
-    </div>
+    <audio id="background-music" loop>
+        <source src="https://files.catbox.moe/njj44a.mp3" type="audio/mp3">
+    </audio>
+    <audio id="hacker-music" loop muted>
+        <source src="https://files.catbox.moe/njj44a.mp3" type="audio/mp3">
+    </audio>
+    <audio id="rain-music" loop muted>
+        <source src="assets/rain_music.mp3" type="audio/mp3">
+    </audio>
+    <audio id="anime-music" loop muted>
+        <source src="assets/anime_music.mp3" type="audio/mp3">
+    </audio>
+    <audio id="car-music" loop muted>
+        <source src="assets/car_music.mp3" type="audio/mp3">
+    </audio>
 
-  </div><!-- /profile-block -->
 
-  <!-- ── SKILLS BLOCK ── -->
-  <div id="skills-block"
-    class="hidden fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20
-           bg-black/80 backdrop-blur-md rounded-2xl p-6
-           border border-theme led-border"
-    style="width:640px;max-width:90vw;">
-    <h2 class="skills-title text-xl font-bold mb-4 bg-clip-text text-transparent font-mono tracking-wider">Skills</h2>
-    <div class="space-y-4">
-      <div>
-        <div class="flex items-center gap-2 mb-1">
-          <img class="skill-icon w-5 h-5" src="assets/python_icon.png" onerror="this.style.display='none'" alt="">
-          <span class="text-sm font-mono">Python</span>
-          <span class="text-xs text-gray-400 ml-auto">87%</span>
-        </div>
-        <div class="w-full bg-white/10 rounded-full h-2">
-          <div id="python-bar" class="skill-bar h-2 rounded-full" style="width:0%"></div>
-        </div>
-      </div>
-      <div>
-        <div class="flex items-center gap-2 mb-1">
-          <img class="skill-icon w-5 h-5" src="assets/cpp_icon.png" onerror="this.style.display='none'" alt="">
-          <span class="text-sm font-mono">C++</span>
-          <span class="text-xs text-gray-400 ml-auto">75%</span>
-        </div>
-        <div class="w-full bg-white/10 rounded-full h-2">
-          <div id="cpp-bar" class="skill-bar h-2 rounded-full" style="width:0%"></div>
-        </div>
-      </div>
-      <div>
-        <div class="flex items-center gap-2 mb-1">
-          <img class="skill-icon w-5 h-5" src="assets/csharp_icon.png" onerror="this.style.display='none'" alt="">
-          <span class="text-sm font-mono">C#</span>
-          <span class="text-xs text-gray-400 ml-auto">80%</span>
-        </div>
-        <div class="w-full bg-white/10 rounded-full h-2">
-          <div id="csharp-bar" class="skill-bar h-2 rounded-full" style="width:0%"></div>
-        </div>
-      </div>
-    </div>
-    <p id="results-hint" class="hidden text-xs text-gray-500 font-mono mt-4 text-center">Click again to go back</p>
-  </div>
-
-  <!-- ── MUSIC PLAYER (NEW) ── -->
-  <div id="guns-player"
-    class="hidden fixed z-20 bg-black/80 backdrop-blur-md rounded-2xl border border-theme"
-    style="bottom:calc(50% - 280px - 78px);left:50%;transform:translateX(-50%);width:640px;max-width:90vw;padding:12px 16px;display:flex;align-items:center;gap:13px;">
-    <div style="width:44px;height:44px;flex-shrink:0;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;position:relative;">
-      🎵
-      <span style="position:absolute;top:-6px;right:-5px;font-size:11px;">🔖</span>
-    </div>
-    <div style="flex:1">
-      <div style="display:flex;align-items:center;gap:7px;">
-        <span id="pt-curr" style="font-size:10.5px;color:rgba(255,255,255,0.5);font-variant-numeric:tabular-nums;min-width:28px;">0:00</span>
-        <div id="pt-track" style="flex:1;height:3px;background:rgba(255,255,255,0.14);border-radius:99px;cursor:pointer;" onclick="playerSeek(event)">
-          <div id="pt-fill" style="height:100%;background:#fff;border-radius:99px;width:0%;pointer-events:none;transition:width .4s linear;"></div>
-        </div>
-        <span id="pt-total" style="font-size:10.5px;color:rgba(255,255,255,0.5);font-variant-numeric:tabular-nums;min-width:28px;text-align:right;">4:27</span>
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
-      <button onclick="playerSkip(-10)" style="background:none;border:none;color:rgba(255,255,255,0.55);cursor:pointer;display:flex;padding:3px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="2.5" height="16" rx="1.2"/><path d="M8 12L20 4v16z"/></svg>
-      </button>
-      <button id="pt-playbtn" onclick="playerToggle()" style="background:none;border:none;color:#fff;cursor:pointer;display:flex;padding:3px;">
-        <svg id="pt-play" width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
-        <svg id="pt-pause" width="19" height="19" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>
-      </button>
-      <button onclick="playerSkip(10)" style="background:none;border:none;color:rgba(255,255,255,0.55);cursor:pointer;display:flex;padding:3px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="17.5" y="4" width="2.5" height="16" rx="1.2"/><path d="M16 12L4 4v16z"/></svg>
-      </button>
-    </div>
-  </div>
-
-  <!-- ── THEME BUTTONS ── -->
-  <div class="controls" id="controls" style="display:none">
-    <button class="theme-button" id="home-theme">1</button>
-    <button class="theme-button" id="hacker-theme">2</button>
-    <button class="theme-button" id="rain-theme">3</button>
-    <button class="theme-button" id="anime-theme">4</button>
-    <button class="theme-button" id="car-theme">5</button>
-  </div>
-
-  <!-- ── VOLUME + TRANSPARENCY ── -->
-  <div class="top-controls" id="top-controls" style="display:none">
-    <div class="volume-control flex items-center gap-2">
-      <svg id="volume-icon" class="volume-icon w-5 h-5 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
-      </svg>
-      <input type="range" id="volume-slider" class="volume-slider" min="0" max="1" step="0.01" value="0.3">
-    </div>
-    <div class="transparency-control flex items-center gap-2">
-      <svg class="transparency-icon w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-      </svg>
-      <input type="range" id="transparency-slider" class="transparency-slider" min="0" max="1" step="0.01" value="0.8">
-    </div>
-  </div>
-
-  <!-- ── RESULTS BUTTON ── -->
-  <div id="results-button-container" class="hidden fixed z-25" style="top:calc(50% + 280px - 20px);left:50%;transform:translateX(-50%);">
-    <button id="results-theme" class="text-sm font-bold py-2 px-4 rounded-xl">📊 Skills</button>
-  </div>
-
-  <!-- ── AUDIO ── -->
-  <audio id="background-music" src="https://r2.guns.lol/e396b2cb-e1d6-4ffb-b1cc-4bbea60056e0.mp3" loop preload="auto"></audio>
-  <audio id="hacker-music"     src="assets/hacker_music.mp3"  loop preload="none"></audio>
-  <audio id="rain-music"       src="assets/rain_music.mp3"    loop preload="none"></audio>
-  <audio id="anime-music"      src="assets/anime_music.mp3"   loop preload="none"></audio>
-  <audio id="car-music"        src="assets/car_music.mp3"     loop preload="none"></audio>
-
-  <!-- Toast for copy -->
-  <div id="guns-toast" style="position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(14px);background:rgba(10,10,14,.97);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.88);padding:7px 15px;border-radius:9px;font-size:11px;font-weight:500;font-family:monospace;opacity:0;transition:all .22s;z-index:999;pointer-events:none;white-space:nowrap;"></div>
-
-  <!-- Tailwind (for your existing classes) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- GSAP (your original project uses it) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
-  <!-- YOUR ORIGINAL SCRIPT (unchanged) -->
-  <script src="script.js"></script>
-
-  <!-- GUNS ADDON (widgets only) -->
-  <script>
-    /* ── show controls after start ── */
-    const _origStart = startScreen.onclick || null;
-    function _onStart() {
-      document.getElementById('controls').style.display = '';
-      document.getElementById('top-controls').style.display = '';
-      document.getElementById('guns-player').style.display = 'flex';
-    }
-    startScreen.addEventListener('click', _onStart);
-    startScreen.addEventListener('touchstart', _onStart, {passive:false});
-
-    /* ── copy address toast ── */
-    function copyAddr(txt, label) {
-      navigator.clipboard.writeText(txt).then(() => {
-        const t = document.getElementById('guns-toast');
-        t.textContent = label + ' address copied!';
-        t.style.opacity = '1';
-        t.style.transform = 'translateX(-50%) translateY(0)';
-        clearTimeout(t._t);
-        t._t = setTimeout(() => {
-          t.style.opacity = '0';
-          t.style.transform = 'translateX(-50%) translateY(14px)';
-        }, 2200);
-      });
-    }
-
-    /* ── music player ── */
-    const aud = document.getElementById('background-music');
-    let _playing = false;
-    const _fmt = s => isFinite(s) ? `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}` : '0:00';
-    aud.addEventListener('loadedmetadata', () => { document.getElementById('pt-total').textContent = _fmt(aud.duration); });
-    aud.addEventListener('timeupdate', () => {
-      if (!aud.duration) return;
-      document.getElementById('pt-fill').style.width = (aud.currentTime / aud.duration * 100) + '%';
-      document.getElementById('pt-curr').textContent = _fmt(aud.currentTime);
-    });
-    function playerToggle() {
-      if (_playing) {
-        aud.pause();
-        document.getElementById('pt-play').style.display = '';
-        document.getElementById('pt-pause').style.display = 'none';
-        _playing = false;
-      } else {
-        aud.play().catch(() => {});
-        document.getElementById('pt-play').style.display = 'none';
-        document.getElementById('pt-pause').style.display = '';
-        _playing = true;
-      }
-    }
-    function playerSkip(s) { aud.currentTime = Math.max(0, Math.min(aud.duration || 0, aud.currentTime + s)); }
-    function playerSeek(e) {
-      const r = document.getElementById('pt-track').getBoundingClientRect();
-      aud.currentTime = Math.max(0, Math.min(aud.duration || 0, ((e.clientX - r.left) / r.width) * (aud.duration || 0)));
-    }
-
-    /* ── GitHub ── */
-    fetch('https://api.github.com/users/fullpaste').then(r => r.json()).then(d => {
-      document.getElementById('gh-pfp').src = d.avatar_url;
-      document.getElementById('gh-name').textContent = d.login;
-      document.getElementById('gh-followers').innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg> ${d.followers} Followers`;
-      document.getElementById('gh-repos').innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> ${d.public_repos} Repos`;
-      document.getElementById('gh-link').href = d.html_url;
-    }).catch(() => {});
-
-    /* ── Discord Lanyard ── */
-    async function loadLanyard() {
-      try {
-        const j = await fetch('https://api.lanyard.rest/v1/users/396664090895974401').then(r => r.json());
-        if (!j.success) return;
-        const d = j.data, u = d.discord_user;
-        if (u.avatar) {
-          const ext = u.avatar.startsWith('a_') ? 'gif' : 'webp';
-          document.getElementById('dc-pfp').src = `https://cdn.discordapp.com/avatars/${u.id}/${u.avatar}.${ext}?size=80`;
-        }
-        document.getElementById('dc-name').textContent = u.global_name || u.username;
-        const dot = document.getElementById('dc-dot');
-        dot.className = 'guns-status s-' + (d.discord_status || 'offline');
-        let act = '';
-        if (d.listening_to_spotify && d.spotify) {
-          act = `${d.spotify.song} — ${d.spotify.artist}`;
-        } else if (d.activities?.length) {
-          const c = d.activities.find(a => a.type === 4);
-          const o = d.activities.find(a => a.type !== 4);
-          act = c?.state || o?.details || o?.name || '';
-        }
-        if (act) document.getElementById('dc-act').textContent = act;
-        setTimeout(loadLanyard, 15000);
-      } catch { setTimeout(loadLanyard, 30000); }
-    }
-    loadLanyard();
-  </script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
