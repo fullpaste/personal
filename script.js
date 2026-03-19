@@ -29,44 +29,55 @@ function initMedia() {
 }
 
 // ─────────────────────────────────────────────
-//  LANYARD — real-time Discord presence via WebSocket
+//  LANYARD — REST first for instant data, then WebSocket for live updates
 // ─────────────────────────────────────────────
-function initLanyard() {
+async function initLanyard() {
+  const nameEl = document.getElementById('dc-display-name');
+
   if (!DISCORD_USER_ID || DISCORD_USER_ID === 'YOUR_DISCORD_ID_HERE') {
-    document.getElementById('dc-display-name').textContent = 'set DISCORD_USER_ID';
-    document.getElementById('dc-display-name').classList.remove('presence-loading');
+    nameEl.textContent = '⚠ set DISCORD_USER_ID in script.js';
+    nameEl.classList.remove('presence-loading');
+    document.getElementById('dc-username').textContent = 'see instructions above';
     return;
   }
 
+  // ── 1. REST fetch for instant render ──
+  try {
+    const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`);
+    const json = await res.json();
+    if (json.success) {
+      renderDiscordPresence(json.data);
+    } else {
+      // User not in Lanyard server
+      nameEl.textContent = '⚠ join discord.gg/lanyard';
+      nameEl.classList.remove('presence-loading');
+      document.getElementById('dc-username').textContent = 'then reload the page';
+      return; // Don't bother with WS if not registered
+    }
+  } catch (err) {
+    console.error('[Lanyard REST]', err);
+    nameEl.textContent = 'offline';
+    nameEl.classList.remove('presence-loading');
+  }
+
+  // ── 2. WebSocket for live updates ──
   let heartbeatInterval = null;
   let ws;
 
   function connect() {
     ws = new WebSocket('wss://api.lanyard.rest/socket');
 
-    ws.addEventListener('open', () => {
-      console.log('[Lanyard] WebSocket connected');
-    });
+    ws.addEventListener('open', () => console.log('[Lanyard] WS connected'));
 
     ws.addEventListener('message', (event) => {
       const msg = JSON.parse(event.data);
-
       switch (msg.op) {
-        case 1: // Hello
-          // Start heartbeat
+        case 1: // Hello — send heartbeat + subscribe
           heartbeatInterval = setInterval(() => {
-            if (ws.readyState === WebSocket.OPEN) {
-              ws.send(JSON.stringify({ op: 3 }));
-            }
+            if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ op: 3 }));
           }, msg.d.heartbeat_interval);
-
-          // Subscribe to user's presence
-          ws.send(JSON.stringify({
-            op: 2,
-            d: { subscribe_to_id: DISCORD_USER_ID }
-          }));
+          ws.send(JSON.stringify({ op: 2, d: { subscribe_to_id: DISCORD_USER_ID } }));
           break;
-
         case 0: // Event
           if (msg.t === 'INIT_STATE' || msg.t === 'PRESENCE_UPDATE') {
             renderDiscordPresence(msg.d);
@@ -76,15 +87,11 @@ function initLanyard() {
     });
 
     ws.addEventListener('close', () => {
-      console.warn('[Lanyard] WebSocket closed — reconnecting in 5s');
       clearInterval(heartbeatInterval);
       setTimeout(connect, 5000);
     });
 
-    ws.addEventListener('error', (err) => {
-      console.error('[Lanyard] WebSocket error', err);
-      ws.close();
-    });
+    ws.addEventListener('error', () => ws.close());
   }
 
   connect();
@@ -172,9 +179,24 @@ function renderDiscordPresence(data) {
 //  GITHUB
 // ─────────────────────────────────────────────
 async function initGitHub() {
+  const loginEl = document.getElementById('gh-login');
+
+  // Always set the link and username immediately so something shows
+  loginEl.textContent = GITHUB_USERNAME;
+  loginEl.classList.remove('presence-loading');
+  document.getElementById('gh-view-btn').href = `https://github.com/${GITHUB_USERNAME}`;
+
   try {
-    const res = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
-    if (!res.ok) throw new Error('GitHub API error: ' + res.status);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000); // 8s timeout
+
+    const res = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`, {
+      signal: controller.signal,
+      headers: { 'Accept': 'application/vnd.github.v3+json' }
+    });
+    clearTimeout(timeout);
+
+    if (!res.ok) throw new Error('GitHub API ' + res.status);
     const user = await res.json();
 
     // Avatar
@@ -182,10 +204,8 @@ async function initGitHub() {
     pfpEl.src = user.avatar_url;
     pfpEl.style.display = 'block';
 
-    // Login
-    const loginEl = document.getElementById('gh-login');
+    // Login (may differ in casing)
     loginEl.textContent = user.login;
-    loginEl.classList.remove('presence-loading');
 
     // Stats
     document.getElementById('gh-followers-count').textContent = user.followers;
@@ -195,10 +215,9 @@ async function initGitHub() {
     document.getElementById('gh-view-btn').href = user.html_url;
   } catch (err) {
     console.error('[GitHub]', err);
-    const loginEl = document.getElementById('gh-login');
-    loginEl.textContent = GITHUB_USERNAME;
-    loginEl.classList.remove('presence-loading');
-    document.getElementById('gh-view-btn').href = `https://github.com/${GITHUB_USERNAME}`;
+    // Fallback already set above — just update stats to show dashes
+    document.getElementById('gh-followers-count').textContent = '–';
+    document.getElementById('gh-repos-count').textContent = '–';
   }
 }
 
