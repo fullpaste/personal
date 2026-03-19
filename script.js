@@ -2,7 +2,7 @@
 //  PRESENCE CONFIG  ← fill these in
 // ─────────────────────────────────────────────
 // 1) Your 18-digit Discord user ID (right-click your name → Copy User ID, needs Developer Mode on)
-const DISCORD_USER_ID = 'YOUR_DISCORD_ID_HERE';
+const DISCORD_USER_ID = '396664090895974401';
 
 // 2) Join the Lanyard server so the bot can track you:
 //    https://discord.gg/lanyard  (just stay in it — you don't need to do anything else)
