@@ -4,271 +4,365 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>xd9</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Space+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Background -->
-  <video id="background" src="https://r2.guns.lol/8739d20d-297a-4f85-a8b3-9ef34916dfc7.mp4"
-    autoplay muted loop playsinline class="video-background"></video>
-  <div id="bg-overlay"></div>
+  <!-- ── BACKGROUND ── -->
+  <video id="background" class="video-background" autoplay muted loop playsinline
+    src="https://r2.guns.lol/8739d20d-297a-4f85-a8b3-9ef34916dfc7.mp4"></video>
 
-  <!-- Snowflakes -->
-  <div id="snow-container"></div>
-
-  <!-- Toast -->
-  <div class="toast" id="toast"></div>
-
-  <!-- Custom cursor -->
-  <div class="custom-cursor" id="cursor"></div>
+  <!-- ── OVERLAYS ── -->
+  <div id="hacker-overlay" class="hidden"></div>
+  <div id="snow-overlay" class="hidden"></div>
   <div class="glitch-overlay"></div>
 
-  <!-- ── MAIN WRAP ── -->
-  <div id="page-wrap">
+  <!-- ── CURSOR ── -->
+  <div class="custom-cursor"></div>
 
-    <!-- ════════ PROFILE BLOCK ════════ -->
-    <div id="profile-block" class="hidden">
-
-      <!-- Top row: pfp + info -->
-      <div class="top-row">
-
-        <!-- PFP + Wings + orbit -->
-        <div class="profile-container" id="profile-container">
-          <div class="wings-wrap">
-            <svg viewBox="0 0 220 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="wL" x1="110" y1="10" x2="40" y2="130" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#d4a8f0" stop-opacity="0.95"/>
-                  <stop offset="45%" stop-color="#a86ed4" stop-opacity="0.7"/>
-                  <stop offset="100%" stop-color="#6830a8" stop-opacity="0.05"/>
-                </linearGradient>
-                <linearGradient id="wR" x1="110" y1="10" x2="180" y2="130" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#d4a8f0" stop-opacity="0.95"/>
-                  <stop offset="45%" stop-color="#a86ed4" stop-opacity="0.7"/>
-                  <stop offset="100%" stop-color="#6830a8" stop-opacity="0.05"/>
-                </linearGradient>
-                <filter id="wglow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-              </defs>
-              <!-- Left wing -->
-              <g filter="url(#wglow)">
-                <path d="M107 95 C100 80,80 65,58 47 C40 32,22 20,15 11 C10 4,17 0,26 7 C19 16,30 25,46 34 C34 25,36 12,49 14 C40 25,50 36,65 43 C52 31,57 18,70 20 C63 31,68 45,83 52 C72 38,77 25,90 29 C84 40,86 56,99 65 C92 49,96 35,108 42 L107 95Z"
-                  fill="url(#wL)" stroke="rgba(210,170,255,0.22)" stroke-width="0.7"/>
-                <path d="M107 95 C101 74,90 58,107 50" stroke="rgba(230,200,255,0.32)" stroke-width="1.1" fill="none" stroke-linecap="round"/>
-                <path d="M107 95 C97 73,84 57,96 70" stroke="rgba(220,185,255,0.22)" stroke-width="0.9" fill="none" stroke-linecap="round"/>
-                <path d="M107 95 C93 72,80 56,86 36" stroke="rgba(220,180,255,0.18)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
-                <path d="M107 95 C88 70,68 50,70 25" stroke="rgba(210,175,255,0.15)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
-                <path d="M107 95 C80 67,53 42,46 18" stroke="rgba(210,170,255,0.12)" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-                <path d="M107 95 C74 66,34 31,26 12" stroke="rgba(205,165,255,0.1)" stroke-width="0.6" fill="none" stroke-linecap="round"/>
-              </g>
-              <!-- Right wing -->
-              <g filter="url(#wglow)">
-                <path d="M113 95 C120 80,140 65,162 47 C180 32,198 20,205 11 C210 4,203 0,194 7 C201 16,190 25,174 34 C186 25,184 12,171 14 C180 25,170 36,155 43 C168 31,163 18,150 20 C157 31,152 45,137 52 C148 38,143 25,130 29 C136 40,134 56,121 65 C128 49,124 35,112 42 L113 95Z"
-                  fill="url(#wR)" stroke="rgba(210,170,255,0.22)" stroke-width="0.7"/>
-                <path d="M113 95 C119 74,130 58,113 50" stroke="rgba(230,200,255,0.32)" stroke-width="1.1" fill="none" stroke-linecap="round"/>
-                <path d="M113 95 C123 73,136 57,124 70" stroke="rgba(220,185,255,0.22)" stroke-width="0.9" fill="none" stroke-linecap="round"/>
-                <path d="M113 95 C127 72,140 56,134 36" stroke="rgba(220,180,255,0.18)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
-                <path d="M113 95 C132 70,152 50,150 25" stroke="rgba(210,175,255,0.15)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
-                <path d="M113 95 C140 67,167 42,174 18" stroke="rgba(210,170,255,0.12)" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-                <path d="M113 95 C146 66,186 31,194 12" stroke="rgba(205,165,255,0.1)" stroke-width="0.6" fill="none" stroke-linecap="round"/>
-              </g>
-            </svg>
-          </div>
-          <img class="profile-picture" id="profile-picture"
-            src="https://r2.guns.lol/b6ca3b19-d9ef-435f-9c9d-ae23de28183a.webp" alt="">
-        </div>
-
-        <!-- Info column -->
-        <div class="info-col">
-          <!-- Name + badges -->
-          <div class="name-row">
-            <span id="profile-name" class="pname">xd9</span>
-            <div class="badge-group">
-              <!-- Diamond -->
-              <div class="badge-container" title="Premium">
-                <svg class="badge" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M2.7 9L5.5 4h13l2.8 5L12 20.5z" fill="rgba(100,185,255,0.9)" stroke="rgba(160,215,255,0.55)" stroke-width="0.6"/><path d="M2.7 9h18.6M8.5 4L6 9 12 20.5M15.5 4L18 9 12 20.5" stroke="rgba(190,228,255,0.3)" stroke-width="0.7" fill="none"/></svg>
-              </div>
-              <!-- Shield/flame -->
-              <div class="badge-container" title="Top Member">
-                <svg class="badge" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L20.5 5.5V12C20.5 17 16.5 21 12 23C7.5 21 3.5 17 3.5 12V5.5Z" fill="rgba(255,255,255,0.09)" stroke="rgba(255,255,255,0.28)" stroke-width="1"/><path d="M12 8c0 0-3.5 3-1 6.5 1 1.5 2 2 2 2s1.2-1.2 1.2-3.2c0 0 1.8 1 .8 4 2-1.2 3.2-3.2 2-6.5s-2-3-5-3z" fill="rgba(255,185,55,0.85)"/></svg>
-              </div>
-              <!-- Star -->
-              <div class="badge-container" title="Verified">
-                <svg class="badge" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.9 6 6.1.9-4.5 4.4 1.1 6.2L12 16.8l-5.6 2.7 1.1-6.2L3 8.9l6.1-.9z" fill="rgba(255,205,55,0.92)" stroke="rgba(255,228,100,0.4)" stroke-width="0.5"/></svg>
-              </div>
-              <!-- Refresh -->
-              <div class="badge-container" title="Active">
-                <svg class="badge" width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" fill="none"/><path d="M8 7.5A6 6 0 0 1 18 12" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M8 7.5L6 5.5M8 7.5L10 5.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 16.5A6 6 0 0 1 6 12" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M16 16.5L14 18.5M16 16.5L18 18.5" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </div>
-            </div>
-          </div>
-
-          <!-- Bio -->
-          <div id="profile-bio" class="bio-text">4lure.sellhub.cx got the cheapest goods.</div>
-
-          <!-- Joined -->
-          <div class="joined-row">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Joined over 1 year ago
-          </div>
-        </div>
-      </div>
-
-      <!-- Divider -->
-      <div class="divider"></div>
-
-      <!-- ── Widgets row ── -->
-      <div class="widgets-row">
-
-        <!-- Discord Widget -->
-        <div class="widget" id="discord-widget">
-          <div class="w-avatar">
-            <img id="dc-pfp" src="https://r2.guns.lol/b6ca3b19-d9ef-435f-9c9d-ae23de28183a.webp" alt="">
-            <div class="status-dot s-dnd" id="dc-dot"></div>
-          </div>
-          <div class="w-info">
-            <div class="w-name-row">
-              <svg width="13" height="13" viewBox="0 0 71 55" fill="#5865f2"><path d="M60.1 4.9A58.7 58.7 0 0 0 45.7.3a.2.2 0 0 0-.2.1 40.9 40.9 0 0 0-1.8 3.7 54.2 54.2 0 0 0-16.3 0A37.6 37.6 0 0 0 25.5.4a.2.2 0 0 0-.2-.1A58.5 58.5 0 0 0 10.9 4.9a.2.2 0 0 0-.1.1C1.6 18.1-.9 31 .3 43.7a.2.2 0 0 0 .1.1 59 59 0 0 0 17.8 9a.2.2 0 0 0 .2-.1 42.1 42.1 0 0 0 3.6-5.9.2.2 0 0 0-.1-.3 38.8 38.8 0 0 1-5.5-2.6.2.2 0 0 1 0-.4c.4-.3.7-.6 1.1-.9a.2.2 0 0 1 .2 0c11.5 5.3 24 5.3 35.4 0a.2.2 0 0 1 .2 0l1 .9a.2.2 0 0 1 0 .4 36.2 36.2 0 0 1-5.5 2.6.2.2 0 0 0-.1.3 47.2 47.2 0 0 0 3.6 5.9.2.2 0 0 0 .2.1 58.7 58.7 0 0 0 17.9-9 .2.2 0 0 0 .1-.1c1.5-15.3-2.5-28.6-10.6-40.4a.2.2 0 0 0-.1-.1ZM23.7 35.8c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.6 0 6.5 3.3 6.4 7.2 0 4-2.8 7.2-6.4 7.2Zm23.6 0c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.6 0 6.5 3.3 6.4 7.2 0 4-2.8 7.2-6.4 7.2Z"/></svg>
-              <span id="dc-name">63kc</span>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)"><path d="M22 4l-2-2-3 3-2-2-1 1 1 1-7 7H6l-3 3 3 3-2 2 1.5 1.5 2-2 3 3 3-3v-2l7-7 1 1 1-1-2-2 3-3zM9 15.5l-1-1 7-7 1 1z"/></svg>
-              <span class="w-tag" id="dc-tag">lure</span>
-            </div>
-            <div class="w-activity" id="dc-activity">
-              <span>🎵</span><span id="dc-act">UPDATED WEBSITE, IN BIO</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- GitHub Widget -->
-        <div class="widget" id="github-widget">
-          <div class="w-gh-label">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="rgba(255,255,255,0.38)"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.38-1.34-1.75-1.34-1.75-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.82.58C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
-            GitHub
-          </div>
-          <div class="w-avatar">
-            <img id="gh-pfp" src="https://avatars.githubusercontent.com/u/0" alt="" style="border-radius:50%">
-          </div>
-          <div class="w-info">
-            <div class="w-name-row" id="gh-name">fullpaste</div>
-            <div class="gh-stats">
-              <span class="gh-stat" id="gh-followers">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                1 Followers
-              </span>
-              <span class="gh-stat" id="gh-repos">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-                3 Repos
-              </span>
-            </div>
-            <a class="view-btn" id="gh-link" href="https://github.com/fullpaste" target="_blank">View Profile</a>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- ── Social icons ── -->
-      <div class="socials-row">
-        <div class="sicon" data-tip="Discord" onclick="openLink('https://discord.com/invite/4z4gv7Qvxe')">
-          <img src="https://r2.guns.lol/de46ec51-f129-47bc-bb93-fc4003a4842d.webp" alt="">
-        </div>
-        <div class="sicon" data-tip="Copy BTC" onclick="copyText('bc1qs6l060za5m79w8rufd30ga6gy2ktdj9kz5yceg','BTC copied!')">
-          <img src="https://r2.guns.lol/8cdb8448-c2bc-4fb4-8fc2-37f61a1a6782.webp" alt="">
-        </div>
-        <div class="sicon" data-tip="Copy LTC" onclick="copyText('ltc1q7y4gg5ge97up9vnjvnfhu6rtgeht2trp4pmg9y','LTC copied!')">
-          <img src="https://r2.guns.lol/991316f1-11f0-4019-8d13-5ff9e57cffd3.webp" alt="">
-        </div>
-        <div class="sicon" data-tip="Copy ETH" onclick="copyText('0x8ac35A0aB12626532ddaFd9A29Bdf59991f000b5','ETH copied!')">
-          <img src="https://r2.guns.lol/4a46a316-49ba-4c66-9311-851b36186e15.webp" alt="">
-        </div>
-        <div class="sicon" data-tip="Shop" onclick="openLink('https://4lure.sellhub.cx')">
-          <img src="https://r2.guns.lol/28527312-ef78-4e8a-a37d-fbb5f2d28f04.webp" alt="">
-        </div>
-      </div>
-
-      <!-- ── Stats bar ── -->
-      <div class="stats-bar">
-        <span class="stat-item">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          <span id="visitor-count">518</span>
-        </span>
-        <span class="stat-sep">|</span>
-        <span class="stat-item">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Miami, Florida, 33162
-        </span>
-      </div>
-
-    </div><!-- /profile-block -->
-
-    <!-- ════════ MUSIC PLAYER ════════ -->
-    <div id="player-block" class="hidden">
-      <div class="player-art">
-        🎵
-        <span class="player-tag">🔖</span>
-      </div>
-      <div class="player-main">
-        <div class="player-bar-row">
-          <span class="ptime" id="time-current">0:00</span>
-          <div class="progress-track" id="progress-track" onclick="seekAudio(event)">
-            <div class="progress-fill" id="progress-fill"></div>
-          </div>
-          <span class="ptime right" id="time-total">4:27</span>
-        </div>
-      </div>
-      <div class="player-controls">
-        <button class="pctrl-btn" onclick="audioSkip(-10)">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="2.5" height="16" rx="1.2"/><path d="M8 12L20 4v16z"/></svg>
-        </button>
-        <button class="pctrl-btn main" id="play-btn" onclick="toggleAudio()">
-          <svg id="play-icon" width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
-          <svg id="pause-icon" width="19" height="19" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>
-        </button>
-        <button class="pctrl-btn" onclick="audioSkip(10)">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="17.5" y="4" width="2.5" height="16" rx="1.2"/><path d="M16 12L4 4v16z"/></svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- ════════ BOTTOM CONTROLS ════════ -->
-    <div class="bottom-controls" id="bottom-controls" style="display:none">
-      <!-- Theme buttons -->
-      <div class="theme-buttons">
-        <button class="theme-btn active" id="theme-1" onclick="switchTheme(1)" title="Default">1</button>
-        <button class="theme-btn" id="theme-2" onclick="switchTheme(2)" title="Hacker">2</button>
-        <button class="theme-btn" id="theme-3" onclick="switchTheme(3)" title="Rain">3</button>
-        <button class="theme-btn" id="theme-4" onclick="switchTheme(4)" title="Anime">4</button>
-        <button class="theme-btn" id="theme-5" onclick="switchTheme(5)" title="Car">5</button>
-      </div>
-      <!-- Volume -->
-      <div class="ctrl-group">
-        <svg class="ctrl-icon" id="volume-icon" onclick="toggleMute()" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
-        </svg>
-        <input type="range" class="ctrl-slider" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
-      </div>
-      <!-- Transparency -->
-      <div class="ctrl-group">
-        <svg class="ctrl-icon transparency-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20V2z"/>
-        </svg>
-        <input type="range" class="ctrl-slider" id="transparency-slider" min="0" max="1" step="0.01" value="0.78">
-      </div>
-    </div>
-
-  </div><!-- /page-wrap -->
-
-  <!-- Start screen -->
-  <div id="start-screen">
-    <div class="start-inner">
-      <img class="start-pfp" src="https://r2.guns.lol/b6ca3b19-d9ef-435f-9c9d-ae23de28183a.webp" alt="">
-      <h1 class="start-name">xd9</h1>
-      <p id="start-text" class="start-hint"></p>
+  <!-- ── START SCREEN ── -->
+  <div id="start-screen" class="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm cursor-pointer">
+    <div class="text-center">
+      <p id="start-text" class="text-2xl font-bold tracking-widest text-white font-mono"></p>
     </div>
   </div>
 
-  <!-- Audio -->
-  <audio id="background-music" src="https://r2.guns.lol/e396b2cb-e1d6-4ffb-b1cc-4bbea60056e0.mp3" loop preload="auto"></audio>
+  <!-- ── PROFILE BLOCK ── -->
+  <div id="profile-block"
+    class="hidden fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20
+           bg-black/80 backdrop-blur-md rounded-2xl p-6
+           border border-theme led-border animated-border"
+    style="width:640px;max-width:90vw;">
 
+    <!-- Top: pfp + name + badges + bio -->
+    <div class="flex items-start gap-6 mb-4">
+
+      <!-- PFP with orbit -->
+      <div class="profile-container flex-shrink-0">
+        <img class="profile-picture w-24 h-24 rounded-full object-cover border-2 profile-border cursor-pointer"
+          src="https://r2.guns.lol/b6ca3b19-d9ef-435f-9c9d-ae23de28183a.webp" alt="">
+      </div>
+
+      <!-- Info -->
+      <div class="flex-1 min-w-0">
+        <!-- Name -->
+        <div class="flex items-center gap-3 mb-2 flex-wrap">
+          <h1 id="profile-name" class="text-3xl font-bold tracking-wider name-gradient bg-clip-text text-transparent"></h1>
+          <!-- Badges -->
+          <div class="badge-group">
+            <div class="badge-container" title="Tools"><img class="badge" src="assets/badge_tools.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="🔧"><span class="badge-back" style="display:none">🔧</span></div>
+            <div class="badge-container" title="Crown"><img class="badge" src="assets/badge_crown.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="👑"><span class="badge-back" style="display:none">👑</span></div>
+            <div class="badge-container" title="Boost"><img class="badge" src="assets/badge_boost.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="🔄"><span class="badge-back" style="display:none">🔄</span></div>
+            <div class="badge-container" title="Active"><img class="badge" src="assets/badge_active.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="📱"><span class="badge-back" style="display:none">📱</span></div>
+            <div class="badge-container" title="Hot"><img class="badge" src="assets/badge_hot.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="🔥"><span class="badge-back" style="display:none">🔥</span></div>
+            <div class="badge-container" title="Dev"><img class="badge" src="assets/badge_dev.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="💉"><span class="badge-back" style="display:none">💉</span></div>
+            <div class="badge-container" title="Verified"><img class="badge" src="assets/badge_verified.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="✅"><span class="badge-back" style="display:none">✅</span></div>
+            <div class="badge-container" title="Award"><img class="badge" src="assets/badge_award.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="🏅"><span class="badge-back" style="display:none">🏅</span></div>
+          </div>
+        </div>
+        <!-- Bio -->
+        <p id="profile-bio" class="text-sm text-gray-300 font-mono mb-2 min-h-[20px]"></p>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <hr class="border-white/10 mb-4">
+
+    <!-- ══ GUNS.LOL WIDGETS (NEW) ══ -->
+    <div class="guns-widgets">
+
+      <!-- Discord Live Widget -->
+      <div class="guns-widget" id="dc-widget">
+        <div class="guns-w-avatar">
+          <img id="dc-pfp" src="https://r2.guns.lol/b6ca3b19-d9ef-435f-9c9d-ae23de28183a.webp" alt="">
+          <div class="guns-status s-dnd" id="dc-dot"></div>
+        </div>
+        <div class="guns-w-info">
+          <div class="guns-w-name">
+            <svg width="13" height="13" viewBox="0 0 71 55" fill="#5865f2" style="flex-shrink:0"><path d="M60.1 4.9A58.7 58.7 0 0 0 45.7.3a.2.2 0 0 0-.2.1 40.9 40.9 0 0 0-1.8 3.7 54.2 54.2 0 0 0-16.3 0A37.6 37.6 0 0 0 25.5.4a.2.2 0 0 0-.2-.1A58.5 58.5 0 0 0 10.9 4.9a.2.2 0 0 0-.1.1C1.6 18.1-.9 31 .3 43.7a.2.2 0 0 0 .1.1 59 59 0 0 0 17.8 9a.2.2 0 0 0 .2-.1 42.1 42.1 0 0 0 3.6-5.9.2.2 0 0 0-.1-.3 38.8 38.8 0 0 1-5.5-2.6.2.2 0 0 1 0-.4c.4-.3.7-.6 1.1-.9a.2.2 0 0 1 .2 0c11.5 5.3 24 5.3 35.4 0a.2.2 0 0 1 .2 0l1 .9a.2.2 0 0 1 0 .4 36.2 36.2 0 0 1-5.5 2.6.2.2 0 0 0-.1.3 47.2 47.2 0 0 0 3.6 5.9.2.2 0 0 0 .2.1 58.7 58.7 0 0 0 17.9-9 .2.2 0 0 0 .1-.1c1.5-15.3-2.5-28.6-10.6-40.4a.2.2 0 0 0-.1-.1ZM23.7 35.8c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.6 0 6.5 3.3 6.4 7.2 0 4-2.8 7.2-6.4 7.2Zm23.6 0c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.6 0 6.5 3.3 6.4 7.2 0 4-2.8 7.2-6.4 7.2Z"/></svg>
+            <span id="dc-name">63kc</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)"><path d="M22 4l-2-2-3 3-2-2-1 1 1 1-7 7H6l-3 3 3 3-2 2 1.5 1.5 2-2 3 3 3-3v-2l7-7 1 1 1-1-2-2 3-3zM9 15.5l-1-1 7-7 1 1z"/></svg>
+            <span class="guns-w-tag" id="dc-tag">lure</span>
+          </div>
+          <div class="guns-w-act" id="dc-activity">
+            <span>🎵</span><span id="dc-act">UPDATED WEBSITE, IN BIO</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GitHub Widget -->
+      <div class="guns-widget" id="gh-widget">
+        <div class="guns-gh-label">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.38-1.34-1.75-1.34-1.75-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.82.58C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </div>
+        <div class="guns-w-avatar">
+          <img id="gh-pfp" src="https://avatars.githubusercontent.com/u/0" alt="" style="border-radius:50%">
+        </div>
+        <div class="guns-w-info">
+          <div class="guns-w-name" id="gh-name" style="margin-bottom:3px">fullpaste</div>
+          <div class="guns-gh-stats">
+            <span class="guns-gh-stat" id="gh-followers">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              1 Followers
+            </span>
+            <span class="guns-gh-stat" id="gh-repos">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              3 Repos
+            </span>
+          </div>
+          <a class="guns-view-btn" id="gh-link" href="https://github.com/fullpaste" target="_blank">View Profile</a>
+        </div>
+      </div>
+
+    </div>
+    <!-- ══ END WIDGETS ══ -->
+
+    <!-- Social Icons -->
+    <div class="social-links mt-3 justify-center">
+      <a class="social-icon social-border" href="https://discord.com/invite/4z4gv7Qvxe" target="_blank" title="Discord">
+        <img src="https://r2.guns.lol/de46ec51-f129-47bc-bb93-fc4003a4842d.webp" width="28" height="28" alt="Discord">
+      </a>
+      <a class="social-icon social-border" href="#" onclick="copyAddr('bc1qs6l060za5m79w8rufd30ga6gy2ktdj9kz5yceg','BTC'); return false;" title="BTC">
+        <img src="https://r2.guns.lol/8cdb8448-c2bc-4fb4-8fc2-37f61a1a6782.webp" width="28" height="28" alt="BTC">
+      </a>
+      <a class="social-icon social-border" href="#" onclick="copyAddr('ltc1q7y4gg5ge97up9vnjvnfhu6rtgeht2trp4pmg9y','LTC'); return false;" title="LTC">
+        <img src="https://r2.guns.lol/991316f1-11f0-4019-8d13-5ff9e57cffd3.webp" width="28" height="28" alt="LTC">
+      </a>
+      <a class="social-icon social-border" href="#" onclick="copyAddr('0x8ac35A0aB12626532ddaFd9A29Bdf59991f000b5','ETH'); return false;" title="ETH">
+        <img src="https://r2.guns.lol/4a46a316-49ba-4c66-9311-851b36186e15.webp" width="28" height="28" alt="ETH">
+      </a>
+      <a class="social-icon social-border" href="https://4lure.sellhub.cx" target="_blank" title="Shop">
+        <img src="https://r2.guns.lol/28527312-ef78-4e8a-a37d-fbb5f2d28f04.webp" width="28" height="28" alt="Shop">
+      </a>
+    </div>
+
+    <!-- Visitor counter -->
+    <div class="visitor-counter flex items-center gap-2 text-sm font-mono mt-3">
+      <svg class="visitor-icon w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+      </svg>
+      <span id="visitor-count" class="visitor-count font-bold">0</span>
+    </div>
+
+  </div><!-- /profile-block -->
+
+  <!-- ── SKILLS BLOCK ── -->
+  <div id="skills-block"
+    class="hidden fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20
+           bg-black/80 backdrop-blur-md rounded-2xl p-6
+           border border-theme led-border"
+    style="width:640px;max-width:90vw;">
+    <h2 class="skills-title text-xl font-bold mb-4 bg-clip-text text-transparent font-mono tracking-wider">Skills</h2>
+    <div class="space-y-4">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <img class="skill-icon w-5 h-5" src="assets/python_icon.png" onerror="this.style.display='none'" alt="">
+          <span class="text-sm font-mono">Python</span>
+          <span class="text-xs text-gray-400 ml-auto">87%</span>
+        </div>
+        <div class="w-full bg-white/10 rounded-full h-2">
+          <div id="python-bar" class="skill-bar h-2 rounded-full" style="width:0%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <img class="skill-icon w-5 h-5" src="assets/cpp_icon.png" onerror="this.style.display='none'" alt="">
+          <span class="text-sm font-mono">C++</span>
+          <span class="text-xs text-gray-400 ml-auto">75%</span>
+        </div>
+        <div class="w-full bg-white/10 rounded-full h-2">
+          <div id="cpp-bar" class="skill-bar h-2 rounded-full" style="width:0%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <img class="skill-icon w-5 h-5" src="assets/csharp_icon.png" onerror="this.style.display='none'" alt="">
+          <span class="text-sm font-mono">C#</span>
+          <span class="text-xs text-gray-400 ml-auto">80%</span>
+        </div>
+        <div class="w-full bg-white/10 rounded-full h-2">
+          <div id="csharp-bar" class="skill-bar h-2 rounded-full" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+    <p id="results-hint" class="hidden text-xs text-gray-500 font-mono mt-4 text-center">Click again to go back</p>
+  </div>
+
+  <!-- ── MUSIC PLAYER (NEW) ── -->
+  <div id="guns-player"
+    class="hidden fixed z-20 bg-black/80 backdrop-blur-md rounded-2xl border border-theme"
+    style="bottom:calc(50% - 280px - 78px);left:50%;transform:translateX(-50%);width:640px;max-width:90vw;padding:12px 16px;display:flex;align-items:center;gap:13px;">
+    <div style="width:44px;height:44px;flex-shrink:0;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;position:relative;">
+      🎵
+      <span style="position:absolute;top:-6px;right:-5px;font-size:11px;">🔖</span>
+    </div>
+    <div style="flex:1">
+      <div style="display:flex;align-items:center;gap:7px;">
+        <span id="pt-curr" style="font-size:10.5px;color:rgba(255,255,255,0.5);font-variant-numeric:tabular-nums;min-width:28px;">0:00</span>
+        <div id="pt-track" style="flex:1;height:3px;background:rgba(255,255,255,0.14);border-radius:99px;cursor:pointer;" onclick="playerSeek(event)">
+          <div id="pt-fill" style="height:100%;background:#fff;border-radius:99px;width:0%;pointer-events:none;transition:width .4s linear;"></div>
+        </div>
+        <span id="pt-total" style="font-size:10.5px;color:rgba(255,255,255,0.5);font-variant-numeric:tabular-nums;min-width:28px;text-align:right;">4:27</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+      <button onclick="playerSkip(-10)" style="background:none;border:none;color:rgba(255,255,255,0.55);cursor:pointer;display:flex;padding:3px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="2.5" height="16" rx="1.2"/><path d="M8 12L20 4v16z"/></svg>
+      </button>
+      <button id="pt-playbtn" onclick="playerToggle()" style="background:none;border:none;color:#fff;cursor:pointer;display:flex;padding:3px;">
+        <svg id="pt-play" width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+        <svg id="pt-pause" width="19" height="19" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>
+      </button>
+      <button onclick="playerSkip(10)" style="background:none;border:none;color:rgba(255,255,255,0.55);cursor:pointer;display:flex;padding:3px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="17.5" y="4" width="2.5" height="16" rx="1.2"/><path d="M16 12L4 4v16z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── THEME BUTTONS ── -->
+  <div class="controls" id="controls" style="display:none">
+    <button class="theme-button" id="home-theme">1</button>
+    <button class="theme-button" id="hacker-theme">2</button>
+    <button class="theme-button" id="rain-theme">3</button>
+    <button class="theme-button" id="anime-theme">4</button>
+    <button class="theme-button" id="car-theme">5</button>
+  </div>
+
+  <!-- ── VOLUME + TRANSPARENCY ── -->
+  <div class="top-controls" id="top-controls" style="display:none">
+    <div class="volume-control flex items-center gap-2">
+      <svg id="volume-icon" class="volume-icon w-5 h-5 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+      </svg>
+      <input type="range" id="volume-slider" class="volume-slider" min="0" max="1" step="0.01" value="0.3">
+    </div>
+    <div class="transparency-control flex items-center gap-2">
+      <svg class="transparency-icon w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+      </svg>
+      <input type="range" id="transparency-slider" class="transparency-slider" min="0" max="1" step="0.01" value="0.8">
+    </div>
+  </div>
+
+  <!-- ── RESULTS BUTTON ── -->
+  <div id="results-button-container" class="hidden fixed z-25" style="top:calc(50% + 280px - 20px);left:50%;transform:translateX(-50%);">
+    <button id="results-theme" class="text-sm font-bold py-2 px-4 rounded-xl">📊 Skills</button>
+  </div>
+
+  <!-- ── AUDIO ── -->
+  <audio id="background-music" src="https://r2.guns.lol/e396b2cb-e1d6-4ffb-b1cc-4bbea60056e0.mp3" loop preload="auto"></audio>
+  <audio id="hacker-music"     src="assets/hacker_music.mp3"  loop preload="none"></audio>
+  <audio id="rain-music"       src="assets/rain_music.mp3"    loop preload="none"></audio>
+  <audio id="anime-music"      src="assets/anime_music.mp3"   loop preload="none"></audio>
+  <audio id="car-music"        src="assets/car_music.mp3"     loop preload="none"></audio>
+
+  <!-- Toast for copy -->
+  <div id="guns-toast" style="position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(14px);background:rgba(10,10,14,.97);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.88);padding:7px 15px;border-radius:9px;font-size:11px;font-weight:500;font-family:monospace;opacity:0;transition:all .22s;z-index:999;pointer-events:none;white-space:nowrap;"></div>
+
+  <!-- Tailwind (for your existing classes) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- GSAP (your original project uses it) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <!-- YOUR ORIGINAL SCRIPT (unchanged) -->
   <script src="script.js"></script>
+
+  <!-- GUNS ADDON (widgets only) -->
+  <script>
+    /* ── show controls after start ── */
+    const _origStart = startScreen.onclick || null;
+    function _onStart() {
+      document.getElementById('controls').style.display = '';
+      document.getElementById('top-controls').style.display = '';
+      document.getElementById('guns-player').style.display = 'flex';
+    }
+    startScreen.addEventListener('click', _onStart);
+    startScreen.addEventListener('touchstart', _onStart, {passive:false});
+
+    /* ── copy address toast ── */
+    function copyAddr(txt, label) {
+      navigator.clipboard.writeText(txt).then(() => {
+        const t = document.getElementById('guns-toast');
+        t.textContent = label + ' address copied!';
+        t.style.opacity = '1';
+        t.style.transform = 'translateX(-50%) translateY(0)';
+        clearTimeout(t._t);
+        t._t = setTimeout(() => {
+          t.style.opacity = '0';
+          t.style.transform = 'translateX(-50%) translateY(14px)';
+        }, 2200);
+      });
+    }
+
+    /* ── music player ── */
+    const aud = document.getElementById('background-music');
+    let _playing = false;
+    const _fmt = s => isFinite(s) ? `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}` : '0:00';
+    aud.addEventListener('loadedmetadata', () => { document.getElementById('pt-total').textContent = _fmt(aud.duration); });
+    aud.addEventListener('timeupdate', () => {
+      if (!aud.duration) return;
+      document.getElementById('pt-fill').style.width = (aud.currentTime / aud.duration * 100) + '%';
+      document.getElementById('pt-curr').textContent = _fmt(aud.currentTime);
+    });
+    function playerToggle() {
+      if (_playing) {
+        aud.pause();
+        document.getElementById('pt-play').style.display = '';
+        document.getElementById('pt-pause').style.display = 'none';
+        _playing = false;
+      } else {
+        aud.play().catch(() => {});
+        document.getElementById('pt-play').style.display = 'none';
+        document.getElementById('pt-pause').style.display = '';
+        _playing = true;
+      }
+    }
+    function playerSkip(s) { aud.currentTime = Math.max(0, Math.min(aud.duration || 0, aud.currentTime + s)); }
+    function playerSeek(e) {
+      const r = document.getElementById('pt-track').getBoundingClientRect();
+      aud.currentTime = Math.max(0, Math.min(aud.duration || 0, ((e.clientX - r.left) / r.width) * (aud.duration || 0)));
+    }
+
+    /* ── GitHub ── */
+    fetch('https://api.github.com/users/fullpaste').then(r => r.json()).then(d => {
+      document.getElementById('gh-pfp').src = d.avatar_url;
+      document.getElementById('gh-name').textContent = d.login;
+      document.getElementById('gh-followers').innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg> ${d.followers} Followers`;
+      document.getElementById('gh-repos').innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> ${d.public_repos} Repos`;
+      document.getElementById('gh-link').href = d.html_url;
+    }).catch(() => {});
+
+    /* ── Discord Lanyard ── */
+    async function loadLanyard() {
+      try {
+        const j = await fetch('https://api.lanyard.rest/v1/users/396664090895974401').then(r => r.json());
+        if (!j.success) return;
+        const d = j.data, u = d.discord_user;
+        if (u.avatar) {
+          const ext = u.avatar.startsWith('a_') ? 'gif' : 'webp';
+          document.getElementById('dc-pfp').src = `https://cdn.discordapp.com/avatars/${u.id}/${u.avatar}.${ext}?size=80`;
+        }
+        document.getElementById('dc-name').textContent = u.global_name || u.username;
+        const dot = document.getElementById('dc-dot');
+        dot.className = 'guns-status s-' + (d.discord_status || 'offline');
+        let act = '';
+        if (d.listening_to_spotify && d.spotify) {
+          act = `${d.spotify.song} — ${d.spotify.artist}`;
+        } else if (d.activities?.length) {
+          const c = d.activities.find(a => a.type === 4);
+          const o = d.activities.find(a => a.type !== 4);
+          act = c?.state || o?.details || o?.name || '';
+        }
+        if (act) document.getElementById('dc-act').textContent = act;
+        setTimeout(loadLanyard, 15000);
+      } catch { setTimeout(loadLanyard, 30000); }
+    }
+    loadLanyard();
+  </script>
+
 </body>
 </html>
