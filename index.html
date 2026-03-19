@@ -1,486 +1,274 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>xd9</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;overflow:hidden;user-select:none}
-
-/* BG */
-#bgv{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;filter:brightness(0.42) saturate(0.12) contrast(1.1)}
-#bgo{position:fixed;inset:0;z-index:1;background:rgba(0,0,0,0.38);pointer-events:none}
-
-/* SNOW */
-.sf{position:fixed;z-index:2;color:rgba(255,255,255,0.55);pointer-events:none;animation:fall linear infinite;font-size:12px}
-@keyframes fall{0%{transform:translateY(-20px);opacity:0}5%{opacity:1}90%{opacity:0.4}100%{transform:translateY(108vh);opacity:0}}
-
-/* LAYOUT */
-#wrap{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:8px;padding:12px}
-
-/* MAIN CARD */
-.card{
-  width:100%;max-width:648px;
-  background:rgba(14,14,16,0.8);
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:20px;
-  padding:18px 18px 14px;
-  backdrop-filter:blur(22px);
-  -webkit-backdrop-filter:blur(22px);
-  box-shadow:0 2px 50px rgba(0,0,0,0.75),inset 0 1px 0 rgba(255,255,255,0.05)
-}
-
-/* TOP */
-.top{display:flex;align-items:flex-start;gap:0;margin-bottom:14px;position:relative}
-
-/* PFP + WINGS */
-.pfp-outer{position:relative;flex-shrink:0;width:108px;height:105px;margin-right:12px;margin-top:-4px}
-.pfp-outer img{
-  position:absolute;z-index:3;
-  width:96px;height:96px;
-  border-radius:50%;object-fit:cover;
-  top:5px;left:6px;
-  border:2px solid rgba(255,255,255,0.07)
-}
-.wings-wrap{position:absolute;inset:-24px -28px;z-index:2;pointer-events:none}
-.wings-wrap svg{width:100%;height:100%}
-
-/* INFO */
-.pinfo{flex:1;padding-top:4px}
-.nrow{display:flex;align-items:center;gap:7px;margin-bottom:4px;flex-wrap:wrap}
-.uname{font-size:25px;font-weight:800;letter-spacing:-0.4px;color:#fff}
-.badges{display:flex;align-items:center;gap:3px}
-
-.bio{font-size:13px;color:rgba(255,255,255,0.82);margin-bottom:4px;line-height:1.45}
-.bio a{color:inherit;text-decoration:none}
-.bio a:hover{text-decoration:underline}
-.joined{display:flex;align-items:center;gap:4px;font-size:11px;color:rgba(255,255,255,0.3)}
-
-/* WIDGETS */
-.widgets{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
-.widget{
-  background:rgba(255,255,255,0.033);
-  border:1px solid rgba(255,255,255,0.052);
-  border-radius:13px;padding:10px 11px;
-  display:flex;align-items:center;gap:10px;
-  position:relative;overflow:hidden;cursor:default;
-  transition:background .15s
-}
-.widget:hover{background:rgba(255,255,255,0.055)}
-
-/* Avatar inside widget */
-.wavatar{position:relative;flex-shrink:0}
-.wavatar img{width:46px;height:46px;border-radius:50%;object-fit:cover}
-.sdot{
-  position:absolute;bottom:-1px;right:-1px;
-  width:14px;height:14px;border-radius:50%;
-  border:2.5px solid rgb(14,14,16)
-}
-.s-online{background:#23a55a}
-.s-dnd{background:#f23f42}
-.s-idle{background:#f0b232}
-.s-offline{background:#747f8d}
-
-/* Discord widget text */
-.winfo{flex:1;min-width:0}
-.wname{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:700;color:#fff;margin-bottom:2px}
-.wtag{font-size:10.5px;font-weight:400;color:rgba(255,255,255,0.38)}
-.wact{font-size:10.5px;color:rgba(255,255,255,0.48);display:flex;align-items:center;gap:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-/* Github label */
-.ghlabel{position:absolute;top:8px;right:9px;display:flex;align-items:center;gap:3px;font-size:9.5px;color:rgba(255,255,255,0.3);font-weight:500}
-.ghstats{display:flex;align-items:center;gap:8px;font-size:10px;color:rgba(255,255,255,0.38);margin-bottom:5px}
-.ghstat{display:flex;align-items:center;gap:2px}
-.vbtn{
-  display:inline-flex;align-items:center;
-  background:#3ba55c;color:#fff;border:none;
-  border-radius:5px;padding:2px 9px;
-  font-size:10.5px;font-weight:600;
-  cursor:pointer;font-family:inherit;text-decoration:none;
-  transition:background .15s
-}
-.vbtn:hover{background:#2d8448}
-
-/* SOCIALS */
-.socials{display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:10px;padding:2px 0}
-.sico{
-  position:relative;width:38px;height:38px;border-radius:50%;
-  background:rgba(255,255,255,0.035);
-  border:1px solid rgba(255,255,255,0.06);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:all .18s;overflow:hidden
-}
-.sico:hover{background:rgba(255,255,255,0.08);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.5)}
-.sico img{width:22px;height:22px;object-fit:contain;filter:drop-shadow(0 0 3px rgba(255,255,255,0.18))}
-.sico::before{
-  content:attr(data-t);
-  position:absolute;bottom:calc(100% + 7px);left:50%;
-  transform:translateX(-50%) scale(0.85);
-  background:rgba(8,8,10,0.96);border:1px solid rgba(255,255,255,0.08);
-  color:#fff;font-size:9.5px;white-space:nowrap;
-  padding:2px 7px;border-radius:5px;
-  opacity:0;pointer-events:none;transition:all .15s;
-  font-family:'Inter',sans-serif;font-weight:500
-}
-.sico:hover::before{opacity:1;transform:translateX(-50%) scale(1)}
-
-/* STATS */
-.sbar{display:flex;align-items:center;gap:10px;font-size:11.5px;color:rgba(255,255,255,0.38)}
-.sbar .si{display:flex;align-items:center;gap:4px}
-.sbar .sp{color:rgba(255,255,255,0.14);font-size:13px}
-
-/* PLAYER */
-.pcard{
-  width:100%;max-width:648px;
-  background:rgba(14,14,16,0.8);
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:16px;padding:13px 15px;
-  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
-  box-shadow:0 2px 40px rgba(0,0,0,0.65),inset 0 1px 0 rgba(255,255,255,0.04);
-  display:flex;align-items:center;gap:13px
-}
-.part{
-  width:46px;height:46px;flex-shrink:0;
-  background:rgba(255,255,255,0.06);
-  border:1px solid rgba(255,255,255,0.07);
-  border-radius:11px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:20px;position:relative
-}
-.ptag{position:absolute;top:-7px;right:-6px;font-size:12px;filter:drop-shadow(0 0 5px rgba(80,220,80,0.4))}
-
-.pmain{flex:1}
-.pbrow{display:flex;align-items:center;gap:7px}
-.ptime{font-size:10.5px;font-weight:500;color:rgba(255,255,255,0.5);font-variant-numeric:tabular-nums;min-width:28px}
-.ptime.r{text-align:right}
-.ptrack{flex:1;height:3px;background:rgba(255,255,255,0.14);border-radius:99px;cursor:pointer;position:relative}
-.pfill{height:100%;background:#fff;border-radius:99px;width:0.7%;pointer-events:none;transition:width .4s linear}
-
-.pctrls{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.pcb{background:none;border:none;color:rgba(255,255,255,0.55);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:4px;transition:color .15s,transform .1s}
-.pcb:hover{color:#fff;transform:scale(1.12)}
-.pcb.main{color:#fff}
-
-/* TOAST */
-.toast{
-  position:fixed;bottom:26px;left:50%;
-  transform:translateX(-50%) translateY(14px);
-  background:rgba(12,12,14,0.97);
-  border:1px solid rgba(255,255,255,0.08);
-  color:rgba(255,255,255,0.88);
-  padding:7px 14px;border-radius:9px;
-  font-size:11px;font-weight:500;
-  backdrop-filter:blur(14px);
-  opacity:0;transition:all .2s;z-index:99;
-  pointer-events:none;white-space:nowrap
-}
-.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>xd9</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<video id="bgv" src="https://r2.guns.lol/8739d20d-297a-4f85-a8b3-9ef34916dfc7.mp4" autoplay muted loop playsinline></video>
-<div id="bgo"></div>
-<div class="toast" id="toast"></div>
+  <!-- Background -->
+  <video id="background" src="https://r2.guns.lol/8739d20d-297a-4f85-a8b3-9ef34916dfc7.mp4"
+    autoplay muted loop playsinline class="video-background"></video>
+  <div id="bg-overlay"></div>
 
-<div id="wrap">
+  <!-- Snowflakes -->
+  <div id="snow-container"></div>
 
-  <!-- ═══ MAIN CARD ═══ -->
-  <div class="card">
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
 
-    <div class="top">
-      <!-- PFP with wings -->
-      <div class="pfp-outer">
-        <div class="wings-wrap">
-          <svg viewBox="0 0 200 165" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="wL" x1="100" y1="10" x2="40" y2="120" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#d4a8f0" stop-opacity="0.95"/>
-                <stop offset="40%" stop-color="#b07de0" stop-opacity="0.75"/>
-                <stop offset="100%" stop-color="#7c44c0" stop-opacity="0.1"/>
-              </linearGradient>
-              <linearGradient id="wR" x1="100" y1="10" x2="160" y2="120" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#d4a8f0" stop-opacity="0.95"/>
-                <stop offset="40%" stop-color="#b07de0" stop-opacity="0.75"/>
-                <stop offset="100%" stop-color="#7c44c0" stop-opacity="0.1"/>
-              </linearGradient>
-              <filter id="wglow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-            </defs>
+  <!-- Custom cursor -->
+  <div class="custom-cursor" id="cursor"></div>
+  <div class="glitch-overlay"></div>
 
-            <!-- LEFT WING -->
-            <g filter="url(#wglow)">
-              <!-- Main wing body -->
-              <path d="M 97 85 C 90 72, 72 58, 52 42 C 36 28, 20 18, 14 10 C 10 4, 16 0, 24 6 C 18 14, 28 22, 42 30 C 30 22, 32 10, 44 12 C 36 22, 44 32, 58 38 C 46 28, 50 16, 62 18 C 56 28, 60 40, 74 46 C 64 34, 68 22, 80 26 C 74 36, 76 50, 88 58 C 82 44, 86 32, 96 38 L 97 85 Z"
-                fill="url(#wL)" stroke="rgba(210,170,255,0.25)" stroke-width="0.8"/>
-              <!-- Feather veins -->
-              <path d="M97 85 C92 68, 82 52, 96 44" stroke="rgba(230,200,255,0.3)" stroke-width="1" fill="none" stroke-linecap="round"/>
-              <path d="M97 85 C88 66, 76 52, 88 64" stroke="rgba(220,190,255,0.22)" stroke-width="0.9" fill="none" stroke-linecap="round"/>
-              <path d="M97 85 C84 64, 72 50, 78 32" stroke="rgba(220,185,255,0.2)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
-              <path d="M97 85 C78 62, 60 44, 62 22" stroke="rgba(210,180,255,0.18)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
-              <path d="M97 85 C72 60, 46 38, 42 16" stroke="rgba(210,175,255,0.15)" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-              <path d="M97 85 C66 58, 30 28, 24 10" stroke="rgba(205,170,255,0.12)" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-            </g>
+  <!-- ── MAIN WRAP ── -->
+  <div id="page-wrap">
 
-            <!-- RIGHT WING -->
-            <g filter="url(#wglow)">
-              <path d="M 103 85 C 110 72, 128 58, 148 42 C 164 28, 180 18, 186 10 C 190 4, 184 0, 176 6 C 182 14, 172 22, 158 30 C 170 22, 168 10, 156 12 C 164 22, 156 32, 142 38 C 154 28, 150 16, 138 18 C 144 28, 140 40, 126 46 C 136 34, 132 22, 120 26 C 126 36, 124 50, 112 58 C 118 44, 114 32, 104 38 L 103 85 Z"
-                fill="url(#wR)" stroke="rgba(210,170,255,0.25)" stroke-width="0.8"/>
-              <path d="M103 85 C108 68, 118 52, 104 44" stroke="rgba(230,200,255,0.3)" stroke-width="1" fill="none" stroke-linecap="round"/>
-              <path d="M103 85 C112 66, 124 52, 112 64" stroke="rgba(220,190,255,0.22)" stroke-width="0.9" fill="none" stroke-linecap="round"/>
-              <path d="M103 85 C116 64, 128 50, 122 32" stroke="rgba(220,185,255,0.2)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
-              <path d="M103 85 C122 62, 140 44, 138 22" stroke="rgba(210,180,255,0.18)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
-              <path d="M103 85 C128 60, 154 38, 158 16" stroke="rgba(210,175,255,0.15)" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-              <path d="M103 85 C134 58, 170 28, 176 10" stroke="rgba(205,170,255,0.12)" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-            </g>
-          </svg>
+    <!-- ════════ PROFILE BLOCK ════════ -->
+    <div id="profile-block" class="hidden">
+
+      <!-- Top row: pfp + info -->
+      <div class="top-row">
+
+        <!-- PFP + Wings + orbit -->
+        <div class="profile-container" id="profile-container">
+          <div class="wings-wrap">
+            <svg viewBox="0 0 220 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="wL" x1="110" y1="10" x2="40" y2="130" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#d4a8f0" stop-opacity="0.95"/>
+                  <stop offset="45%" stop-color="#a86ed4" stop-opacity="0.7"/>
+                  <stop offset="100%" stop-color="#6830a8" stop-opacity="0.05"/>
+                </linearGradient>
+                <linearGradient id="wR" x1="110" y1="10" x2="180" y2="130" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#d4a8f0" stop-opacity="0.95"/>
+                  <stop offset="45%" stop-color="#a86ed4" stop-opacity="0.7"/>
+                  <stop offset="100%" stop-color="#6830a8" stop-opacity="0.05"/>
+                </linearGradient>
+                <filter id="wglow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <!-- Left wing -->
+              <g filter="url(#wglow)">
+                <path d="M107 95 C100 80,80 65,58 47 C40 32,22 20,15 11 C10 4,17 0,26 7 C19 16,30 25,46 34 C34 25,36 12,49 14 C40 25,50 36,65 43 C52 31,57 18,70 20 C63 31,68 45,83 52 C72 38,77 25,90 29 C84 40,86 56,99 65 C92 49,96 35,108 42 L107 95Z"
+                  fill="url(#wL)" stroke="rgba(210,170,255,0.22)" stroke-width="0.7"/>
+                <path d="M107 95 C101 74,90 58,107 50" stroke="rgba(230,200,255,0.32)" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+                <path d="M107 95 C97 73,84 57,96 70" stroke="rgba(220,185,255,0.22)" stroke-width="0.9" fill="none" stroke-linecap="round"/>
+                <path d="M107 95 C93 72,80 56,86 36" stroke="rgba(220,180,255,0.18)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+                <path d="M107 95 C88 70,68 50,70 25" stroke="rgba(210,175,255,0.15)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+                <path d="M107 95 C80 67,53 42,46 18" stroke="rgba(210,170,255,0.12)" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+                <path d="M107 95 C74 66,34 31,26 12" stroke="rgba(205,165,255,0.1)" stroke-width="0.6" fill="none" stroke-linecap="round"/>
+              </g>
+              <!-- Right wing -->
+              <g filter="url(#wglow)">
+                <path d="M113 95 C120 80,140 65,162 47 C180 32,198 20,205 11 C210 4,203 0,194 7 C201 16,190 25,174 34 C186 25,184 12,171 14 C180 25,170 36,155 43 C168 31,163 18,150 20 C157 31,152 45,137 52 C148 38,143 25,130 29 C136 40,134 56,121 65 C128 49,124 35,112 42 L113 95Z"
+                  fill="url(#wR)" stroke="rgba(210,170,255,0.22)" stroke-width="0.7"/>
+                <path d="M113 95 C119 74,130 58,113 50" stroke="rgba(230,200,255,0.32)" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+                <path d="M113 95 C123 73,136 57,124 70" stroke="rgba(220,185,255,0.22)" stroke-width="0.9" fill="none" stroke-linecap="round"/>
+                <path d="M113 95 C127 72,140 56,134 36" stroke="rgba(220,180,255,0.18)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+                <path d="M113 95 C132 70,152 50,150 25" stroke="rgba(210,175,255,0.15)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+                <path d="M113 95 C140 67,167 42,174 18" stroke="rgba(210,170,255,0.12)" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+                <path d="M113 95 C146 66,186 31,194 12" stroke="rgba(205,165,255,0.1)" stroke-width="0.6" fill="none" stroke-linecap="round"/>
+              </g>
+            </svg>
+          </div>
+          <img class="profile-picture" id="profile-picture"
+            src="https://r2.guns.lol/b6ca3b19-d9ef-435f-9c9d-ae23de28183a.webp" alt="">
         </div>
-        <img src="https://r2.guns.lol/b6ca3b19-d9ef-435f-9c9d-ae23de28183a.webp" alt="">
-      </div>
 
-      <div class="pinfo">
-        <div class="nrow">
-          <span class="uname">xd9</span>
-          <div class="badges">
-            <!-- Diamond -->
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M2.7 9L5.5 4h13l2.8 5L12 20.5z" fill="rgba(100,180,255,0.85)" stroke="rgba(160,215,255,0.5)" stroke-width="0.6"/><path d="M2.7 9h18.6M8.5 4L6 9 12 20.5M15.5 4L18 9 12 20.5" stroke="rgba(180,225,255,0.3)" stroke-width="0.7" fill="none"/></svg>
-            <!-- Shield -->
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L20.5 5.5V11.5C20.5 16.5 16.5 20.5 12 22.5C7.5 20.5 3.5 16.5 3.5 11.5V5.5Z" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.28)" stroke-width="1"/><path d="M12 7.5c0 0-3.5 3-1 6.5 1 1.5 2.2 2.2 2.2 2.2s1.2-1.2 1.2-3.2c0 0 1.8 1 .8 4 2-1.2 3.2-3.2 2-6.5s-2-3-5.2-3z" fill="rgba(255,190,60,0.8)"/></svg>
-            <!-- Star -->
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.9 6 6.1.9-4.5 4.4 1.1 6.2L12 16.8l-5.6 2.7 1.1-6.2L3 8.9l6.1-.9z" fill="rgba(255,205,55,0.92)" stroke="rgba(255,228,100,0.45)" stroke-width="0.5"/></svg>
-            <!-- Refresh -->
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" fill="none"/><path d="M8 7.5A6 6 0 0 1 18 12" stroke="rgba(255,255,255,0.65)" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M8 7.5L6 5.5M8 7.5L10 5.5" stroke="rgba(255,255,255,0.65)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 16.5A6 6 0 0 1 6 12" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M16 16.5L14 18.5M16 16.5L18 18.5" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <!-- Info column -->
+        <div class="info-col">
+          <!-- Name + badges -->
+          <div class="name-row">
+            <span id="profile-name" class="pname">xd9</span>
+            <div class="badge-group">
+              <!-- Diamond -->
+              <div class="badge-container" title="Premium">
+                <svg class="badge" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M2.7 9L5.5 4h13l2.8 5L12 20.5z" fill="rgba(100,185,255,0.9)" stroke="rgba(160,215,255,0.55)" stroke-width="0.6"/><path d="M2.7 9h18.6M8.5 4L6 9 12 20.5M15.5 4L18 9 12 20.5" stroke="rgba(190,228,255,0.3)" stroke-width="0.7" fill="none"/></svg>
+              </div>
+              <!-- Shield/flame -->
+              <div class="badge-container" title="Top Member">
+                <svg class="badge" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L20.5 5.5V12C20.5 17 16.5 21 12 23C7.5 21 3.5 17 3.5 12V5.5Z" fill="rgba(255,255,255,0.09)" stroke="rgba(255,255,255,0.28)" stroke-width="1"/><path d="M12 8c0 0-3.5 3-1 6.5 1 1.5 2 2 2 2s1.2-1.2 1.2-3.2c0 0 1.8 1 .8 4 2-1.2 3.2-3.2 2-6.5s-2-3-5-3z" fill="rgba(255,185,55,0.85)"/></svg>
+              </div>
+              <!-- Star -->
+              <div class="badge-container" title="Verified">
+                <svg class="badge" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.9 6 6.1.9-4.5 4.4 1.1 6.2L12 16.8l-5.6 2.7 1.1-6.2L3 8.9l6.1-.9z" fill="rgba(255,205,55,0.92)" stroke="rgba(255,228,100,0.4)" stroke-width="0.5"/></svg>
+              </div>
+              <!-- Refresh -->
+              <div class="badge-container" title="Active">
+                <svg class="badge" width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" fill="none"/><path d="M8 7.5A6 6 0 0 1 18 12" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M8 7.5L6 5.5M8 7.5L10 5.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 16.5A6 6 0 0 1 6 12" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M16 16.5L14 18.5M16 16.5L18 18.5" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bio -->
+          <div id="profile-bio" class="bio-text">4lure.sellhub.cx got the cheapest goods.</div>
+
+          <!-- Joined -->
+          <div class="joined-row">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Joined over 1 year ago
           </div>
         </div>
-        <div class="bio"><a href="https://4lure.sellhub.cx" target="_blank">4lure.sellhub.cx</a> got the cheapest goods.</div>
-        <div class="joined">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Joined over 1 year ago
+      </div>
+
+      <!-- Divider -->
+      <div class="divider"></div>
+
+      <!-- ── Widgets row ── -->
+      <div class="widgets-row">
+
+        <!-- Discord Widget -->
+        <div class="widget" id="discord-widget">
+          <div class="w-avatar">
+            <img id="dc-pfp" src="https://r2.guns.lol/b6ca3b19-d9ef-435f-9c9d-ae23de28183a.webp" alt="">
+            <div class="status-dot s-dnd" id="dc-dot"></div>
+          </div>
+          <div class="w-info">
+            <div class="w-name-row">
+              <svg width="13" height="13" viewBox="0 0 71 55" fill="#5865f2"><path d="M60.1 4.9A58.7 58.7 0 0 0 45.7.3a.2.2 0 0 0-.2.1 40.9 40.9 0 0 0-1.8 3.7 54.2 54.2 0 0 0-16.3 0A37.6 37.6 0 0 0 25.5.4a.2.2 0 0 0-.2-.1A58.5 58.5 0 0 0 10.9 4.9a.2.2 0 0 0-.1.1C1.6 18.1-.9 31 .3 43.7a.2.2 0 0 0 .1.1 59 59 0 0 0 17.8 9a.2.2 0 0 0 .2-.1 42.1 42.1 0 0 0 3.6-5.9.2.2 0 0 0-.1-.3 38.8 38.8 0 0 1-5.5-2.6.2.2 0 0 1 0-.4c.4-.3.7-.6 1.1-.9a.2.2 0 0 1 .2 0c11.5 5.3 24 5.3 35.4 0a.2.2 0 0 1 .2 0l1 .9a.2.2 0 0 1 0 .4 36.2 36.2 0 0 1-5.5 2.6.2.2 0 0 0-.1.3 47.2 47.2 0 0 0 3.6 5.9.2.2 0 0 0 .2.1 58.7 58.7 0 0 0 17.9-9 .2.2 0 0 0 .1-.1c1.5-15.3-2.5-28.6-10.6-40.4a.2.2 0 0 0-.1-.1ZM23.7 35.8c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.6 0 6.5 3.3 6.4 7.2 0 4-2.8 7.2-6.4 7.2Zm23.6 0c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.6 0 6.5 3.3 6.4 7.2 0 4-2.8 7.2-6.4 7.2Z"/></svg>
+              <span id="dc-name">63kc</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)"><path d="M22 4l-2-2-3 3-2-2-1 1 1 1-7 7H6l-3 3 3 3-2 2 1.5 1.5 2-2 3 3 3-3v-2l7-7 1 1 1-1-2-2 3-3zM9 15.5l-1-1 7-7 1 1z"/></svg>
+              <span class="w-tag" id="dc-tag">lure</span>
+            </div>
+            <div class="w-activity" id="dc-activity">
+              <span>🎵</span><span id="dc-act">UPDATED WEBSITE, IN BIO</span>
+            </div>
+          </div>
         </div>
+
+        <!-- GitHub Widget -->
+        <div class="widget" id="github-widget">
+          <div class="w-gh-label">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="rgba(255,255,255,0.38)"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.38-1.34-1.75-1.34-1.75-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.82.58C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </div>
+          <div class="w-avatar">
+            <img id="gh-pfp" src="https://avatars.githubusercontent.com/u/0" alt="" style="border-radius:50%">
+          </div>
+          <div class="w-info">
+            <div class="w-name-row" id="gh-name">fullpaste</div>
+            <div class="gh-stats">
+              <span class="gh-stat" id="gh-followers">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                1 Followers
+              </span>
+              <span class="gh-stat" id="gh-repos">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                3 Repos
+              </span>
+            </div>
+            <a class="view-btn" id="gh-link" href="https://github.com/fullpaste" target="_blank">View Profile</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── Social icons ── -->
+      <div class="socials-row">
+        <div class="sicon" data-tip="Discord" onclick="openLink('https://discord.com/invite/4z4gv7Qvxe')">
+          <img src="https://r2.guns.lol/de46ec51-f129-47bc-bb93-fc4003a4842d.webp" alt="">
+        </div>
+        <div class="sicon" data-tip="Copy BTC" onclick="copyText('bc1qs6l060za5m79w8rufd30ga6gy2ktdj9kz5yceg','BTC copied!')">
+          <img src="https://r2.guns.lol/8cdb8448-c2bc-4fb4-8fc2-37f61a1a6782.webp" alt="">
+        </div>
+        <div class="sicon" data-tip="Copy LTC" onclick="copyText('ltc1q7y4gg5ge97up9vnjvnfhu6rtgeht2trp4pmg9y','LTC copied!')">
+          <img src="https://r2.guns.lol/991316f1-11f0-4019-8d13-5ff9e57cffd3.webp" alt="">
+        </div>
+        <div class="sicon" data-tip="Copy ETH" onclick="copyText('0x8ac35A0aB12626532ddaFd9A29Bdf59991f000b5','ETH copied!')">
+          <img src="https://r2.guns.lol/4a46a316-49ba-4c66-9311-851b36186e15.webp" alt="">
+        </div>
+        <div class="sicon" data-tip="Shop" onclick="openLink('https://4lure.sellhub.cx')">
+          <img src="https://r2.guns.lol/28527312-ef78-4e8a-a37d-fbb5f2d28f04.webp" alt="">
+        </div>
+      </div>
+
+      <!-- ── Stats bar ── -->
+      <div class="stats-bar">
+        <span class="stat-item">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span id="visitor-count">518</span>
+        </span>
+        <span class="stat-sep">|</span>
+        <span class="stat-item">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Miami, Florida, 33162
+        </span>
+      </div>
+
+    </div><!-- /profile-block -->
+
+    <!-- ════════ MUSIC PLAYER ════════ -->
+    <div id="player-block" class="hidden">
+      <div class="player-art">
+        🎵
+        <span class="player-tag">🔖</span>
+      </div>
+      <div class="player-main">
+        <div class="player-bar-row">
+          <span class="ptime" id="time-current">0:00</span>
+          <div class="progress-track" id="progress-track" onclick="seekAudio(event)">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <span class="ptime right" id="time-total">4:27</span>
+        </div>
+      </div>
+      <div class="player-controls">
+        <button class="pctrl-btn" onclick="audioSkip(-10)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="2.5" height="16" rx="1.2"/><path d="M8 12L20 4v16z"/></svg>
+        </button>
+        <button class="pctrl-btn main" id="play-btn" onclick="toggleAudio()">
+          <svg id="play-icon" width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+          <svg id="pause-icon" width="19" height="19" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>
+        </button>
+        <button class="pctrl-btn" onclick="audioSkip(10)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="17.5" y="4" width="2.5" height="16" rx="1.2"/><path d="M16 12L4 4v16z"/></svg>
+        </button>
       </div>
     </div>
 
-    <!-- Widgets -->
-    <div class="widgets">
-
-      <!-- Discord widget -->
-      <div class="widget">
-        <div class="wavatar">
-          <img id="dc-pfp" src="https://r2.guns.lol/b6ca3b19-d9ef-435f-9c9d-ae23de28183a.webp" alt="">
-          <div class="sdot s-dnd" id="dcdot"></div>
-        </div>
-        <div class="winfo">
-          <div class="wname">
-            <span id="dcname">63kc</span>
-            <!-- syringe -->
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="rgba(255,255,255,0.45)"><path d="M22 4l-2-2-3 3-2-2-1 1 1 1-7 7H6l-3 3 3 3-2 2 1.5 1.5 2-2 3 3 3-3v-2l7-7 1 1 1-1-2-2 3-3zM9 15.5l-1-1 7-7 1 1z"/></svg>
-            <span class="wtag" id="dctag">lure</span>
-          </div>
-          <div class="wact">
-            <span>🎵</span>
-            <span id="dcact">UPDATED WEBSITE, IN BIO</span>
-          </div>
-        </div>
+    <!-- ════════ BOTTOM CONTROLS ════════ -->
+    <div class="bottom-controls" id="bottom-controls" style="display:none">
+      <!-- Theme buttons -->
+      <div class="theme-buttons">
+        <button class="theme-btn active" id="theme-1" onclick="switchTheme(1)" title="Default">1</button>
+        <button class="theme-btn" id="theme-2" onclick="switchTheme(2)" title="Hacker">2</button>
+        <button class="theme-btn" id="theme-3" onclick="switchTheme(3)" title="Rain">3</button>
+        <button class="theme-btn" id="theme-4" onclick="switchTheme(4)" title="Anime">4</button>
+        <button class="theme-btn" id="theme-5" onclick="switchTheme(5)" title="Car">5</button>
       </div>
-
-      <!-- GitHub widget -->
-      <div class="widget">
-        <div class="ghlabel">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="rgba(255,255,255,0.35)"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.38-1.34-1.75-1.34-1.75-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.82.58C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
-          GitHub
-        </div>
-        <div class="wavatar">
-          <img id="gh-pfp" src="https://avatars.githubusercontent.com/u/0" alt="" style="border-radius:50%">
-        </div>
-        <div class="winfo">
-          <div class="wname" id="ghname" style="margin-bottom:3px">fullpaste</div>
-          <div class="ghstats">
-            <span class="ghstat" id="ghfoll">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              1 Followers
-            </span>
-            <span class="ghstat" id="ghrepos">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-              3 Repos
-            </span>
-          </div>
-          <a class="vbtn" id="ghlink" href="https://github.com/fullpaste" target="_blank">View Profile</a>
-        </div>
+      <!-- Volume -->
+      <div class="ctrl-group">
+        <svg class="ctrl-icon" id="volume-icon" onclick="toggleMute()" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+        </svg>
+        <input type="range" class="ctrl-slider" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
       </div>
-
-    </div>
-
-    <!-- Social icons -->
-    <div class="socials">
-      <div class="sico" data-t="Discord" onclick="go('https://discord.com/invite/4z4gv7Qvxe')">
-        <img src="https://r2.guns.lol/de46ec51-f129-47bc-bb93-fc4003a4842d.webp" alt="">
-      </div>
-      <div class="sico" data-t="Copy BTC" onclick="cp('bc1qs6l060za5m79w8rufd30ga6gy2ktdj9kz5yceg','BTC address copied!')">
-        <img src="https://r2.guns.lol/8cdb8448-c2bc-4fb4-8fc2-37f61a1a6782.webp" alt="">
-      </div>
-      <div class="sico" data-t="Copy LTC" onclick="cp('ltc1q7y4gg5ge97up9vnjvnfhu6rtgeht2trp4pmg9y','LTC address copied!')">
-        <img src="https://r2.guns.lol/991316f1-11f0-4019-8d13-5ff9e57cffd3.webp" alt="">
-      </div>
-      <div class="sico" data-t="Copy ETH" onclick="cp('0x8ac35A0aB12626532ddaFd9A29Bdf59991f000b5','ETH address copied!')">
-        <img src="https://r2.guns.lol/4a46a316-49ba-4c66-9311-851b36186e15.webp" alt="">
-      </div>
-      <div class="sico" data-t="Shop" onclick="go('https://4lure.sellhub.cx')">
-        <img src="https://r2.guns.lol/28527312-ef78-4e8a-a37d-fbb5f2d28f04.webp" alt="">
+      <!-- Transparency -->
+      <div class="ctrl-group">
+        <svg class="ctrl-icon transparency-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20V2z"/>
+        </svg>
+        <input type="range" class="ctrl-slider" id="transparency-slider" min="0" max="1" step="0.01" value="0.78">
       </div>
     </div>
 
-    <!-- Stats bar -->
-    <div class="sbar">
-      <span class="si">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        <span id="vc">518</span>
-      </span>
-      <span class="sp">|</span>
-      <span class="si">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        Miami, Florida, 33162
-      </span>
+  </div><!-- /page-wrap -->
+
+  <!-- Start screen -->
+  <div id="start-screen">
+    <div class="start-inner">
+      <img class="start-pfp" src="https://r2.guns.lol/b6ca3b19-d9ef-435f-9c9d-ae23de28183a.webp" alt="">
+      <h1 class="start-name">xd9</h1>
+      <p id="start-text" class="start-hint"></p>
     </div>
   </div>
 
-  <!-- ═══ PLAYER CARD ═══ -->
-  <div class="pcard">
-    <div class="part">
-      🎵
-      <span class="ptag">🔖</span>
-    </div>
-    <div class="pmain">
-      <div class="pbrow">
-        <span class="ptime" id="tc">0:00</span>
-        <div class="ptrack" id="ptrack" onclick="seek(event)">
-          <div class="pfill" id="pfill"></div>
-        </div>
-        <span class="ptime r" id="tt">4:27</span>
-      </div>
-    </div>
-    <div class="pctrls">
-      <button class="pcb" onclick="skip(-10)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="2.5" height="16" rx="1.2"/><path d="M8 12L20 4v16z"/></svg>
-      </button>
-      <button class="pcb main" id="pbtn" onclick="togglePlay()">
-        <svg id="picon" width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
-        <svg id="pausei" width="19" height="19" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>
-      </button>
-      <button class="pcb" onclick="skip(10)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="17.5" y="4" width="2.5" height="16" rx="1.2"/><path d="M16 12L4 4v16z"/></svg>
-      </button>
-    </div>
-  </div>
+  <!-- Audio -->
+  <audio id="background-music" src="https://r2.guns.lol/e396b2cb-e1d6-4ffb-b1cc-4bbea60056e0.mp3" loop preload="auto"></audio>
 
-</div>
-
-<audio id="aud" src="https://r2.guns.lol/e396b2cb-e1d6-4ffb-b1cc-4bbea60056e0.mp3" loop preload="auto"></audio>
-
-<script>
-// ── Snow
-const SC=['❄','✦','✧','*','·','∗'];
-for(let i=0;i<22;i++){
-  const e=document.createElement('span');
-  e.className='sf';
-  e.textContent=SC[i%SC.length];
-  e.style.cssText=`left:${Math.random()*100}%;top:${-10-Math.random()*50}px;font-size:${7+Math.random()*8}px;animation-duration:${7+Math.random()*12}s;animation-delay:${-Math.random()*14}s;opacity:${0.2+Math.random()*0.5}`;
-  document.body.appendChild(e);
-}
-
-// ── Utils
-const go=u=>window.open(u,'_blank');
-function cp(t,m){navigator.clipboard.writeText(t).then(()=>showToast(m))}
-function showToast(m){
-  const el=document.getElementById('toast');
-  el.textContent=m;el.classList.add('on');
-  clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),2200);
-}
-
-// ── Audio
-const aud=document.getElementById('aud');
-const pfill=document.getElementById('pfill');
-const tcEl=document.getElementById('tc');
-const ttEl=document.getElementById('tt');
-let playing=false;
-
-const fmt=s=>{if(isNaN(s)||!isFinite(s))return'0:00';const m=Math.floor(s/60),sec=Math.floor(s%60);return`${m}:${sec.toString().padStart(2,'0')}`};
-
-aud.addEventListener('loadedmetadata',()=>{ttEl.textContent=fmt(aud.duration)});
-aud.addEventListener('timeupdate',()=>{
-  if(!aud.duration)return;
-  pfill.style.width=(aud.currentTime/aud.duration*100)+'%';
-  tcEl.textContent=fmt(aud.currentTime);
-});
-
-function togglePlay(){
-  if(playing){
-    aud.pause();
-    document.getElementById('picon').style.display='';
-    document.getElementById('pausei').style.display='none';
-    playing=false;
-  } else {
-    aud.play().catch(()=>{});
-    document.getElementById('picon').style.display='none';
-    document.getElementById('pausei').style.display='';
-    playing=true;
-  }
-}
-const skip=s=>{aud.currentTime=Math.max(0,Math.min(aud.duration||0,aud.currentTime+s))};
-function seek(e){
-  const r=document.getElementById('ptrack').getBoundingClientRect();
-  aud.currentTime=Math.max(0,Math.min(aud.duration||0,((e.clientX-r.left)/r.width)*(aud.duration||0)));
-}
-document.addEventListener('click',()=>{if(!playing)togglePlay()},{once:true});
-
-// ── GitHub
-fetch('https://api.github.com/users/fullpaste')
-  .then(r=>r.json()).then(d=>{
-    document.getElementById('gh-pfp').src=d.avatar_url;
-    document.getElementById('ghname').textContent=d.login;
-    document.getElementById('ghfoll').innerHTML=`<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg> ${d.followers} Followers`;
-    document.getElementById('ghrepos').innerHTML=`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> ${d.public_repos} Repos`;
-    document.getElementById('ghlink').href=d.html_url;
-  }).catch(()=>{});
-
-// ── Lanyard (live Discord presence)
-const DID='396664090895974401';
-async function lanyard(){
-  try{
-    const r=await fetch(`https://api.lanyard.rest/v1/users/${DID}`);
-    const j=await r.json();
-    if(!j.success)return;
-    const d=j.data,u=d.discord_user;
-    // Avatar
-    if(u.avatar){
-      const ext=u.avatar.startsWith('a_')?'gif':'webp';
-      document.getElementById('dc-pfp').src=`https://cdn.discordapp.com/avatars/${u.id}/${u.avatar}.${ext}?size=64`;
-    }
-    // Name + tag
-    document.getElementById('dcname').textContent=u.global_name||u.username;
-    // Status
-    const dotEl=document.getElementById('dcdot');
-    dotEl.className='sdot s-'+d.discord_status;
-    // Activity text
-    let act='';
-    if(d.listening_to_spotify&&d.spotify){
-      act=`${d.spotify.song} — ${d.spotify.artist}`;
-      document.querySelector('#dc-pfp').closest('.widget').querySelector('.wact').innerHTML=`<span>🎵</span><span id="dcact">${act}</span>`;
-    } else if(d.activities?.length){
-      const a=d.activities.find(x=>x.type===4)||d.activities[0];
-      act=a.state||a.details||a.name||'';
-      document.getElementById('dcact').textContent=act||'UPDATED WEBSITE, IN BIO';
-    }
-    setTimeout(lanyard,15000);
-  }catch(e){setTimeout(lanyard,30000)}
-}
-lanyard();
-
-// ── Views
-const vk='xd9v';
-let v=parseInt(localStorage.getItem(vk)||'517')+1;
-localStorage.setItem(vk,v);
-document.getElementById('vc').textContent=v.toLocaleString();
-</script>
+  <script src="script.js"></script>
 </body>
 </html>
